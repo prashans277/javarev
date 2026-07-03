@@ -14,7 +14,6 @@
   --bull:#00D98A; --bear:#FF5C5C; --gold:#E8B84B;
   --text:#E7ECF2; --muted:#7C8894; --muted2:#54606D;
 }
-*{scroll-behavior:smooth}
 body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; overflow-x:hidden;}
 .font-display{font-family:'Space Grotesk',sans-serif;}
 .font-mono{font-family:'JetBrains Mono',monospace;}
@@ -40,6 +39,34 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 .date-pill.active,.time-pill.active{background:var(--bull); color:#06120C; border-color:var(--bull) !important; font-weight:600;}
 ::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
 
+/* Forms / validation */
+.field-input{width:100%; margin-top:.375rem; background:transparent; border:1px solid var(--line); border-radius:.5rem; padding:.6rem 1rem; font-size:.875rem; transition:border-color .25s ease; color:var(--text);}
+.field-input:focus{outline:none; border-color:var(--bull);}
+.field-input.invalid{border-color:var(--bear) !important;}
+.field-error{color:var(--bear); font-size:11px; margin-top:5px; min-height:14px; display:none;}
+.field-error.show{display:block;}
+
+/* Spinner */
+.spinner{width:15px; height:15px; border:2px solid rgba(255,255,255,.3); border-top-color:currentColor; border-radius:50%; display:inline-block; animation:spin .7s linear infinite; vertical-align:-2px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.btn-loading .btn-label{opacity:0;}
+.btn-loading{position:relative; pointer-events:none;}
+.btn-loading .spinner{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);}
+
+/* Selectable slot card */
+.slot-card{cursor:pointer; transition:border-color .25s ease, background .25s ease, transform .25s ease;}
+.slot-card.active{border-color:var(--bull) !important; background:rgba(0,217,138,.08); transform:translateY(-2px);}
+
+/* Auth view toggle */
+.auth-view.hidden{display:none;}
+
+/* Admin table */
+#adminTableBody tr{border-top:1px solid var(--line);}
+#adminTableBody td{padding:.65rem .75rem; white-space:nowrap;}
+.status-pill{font-size:10px; font-family:'JetBrains Mono',monospace; padding:2px 8px; border-radius:999px; display:inline-block;}
+.status-pending{background:rgba(232,184,75,.15); color:var(--gold); border:1px solid rgba(232,184,75,.35);}
+.status-paid{background:rgba(0,217,138,.15); color:var(--bull); border:1px solid rgba(0,217,138,.35);}
+
 /* Nav */
 #nav{transition:background .35s ease, border-color .35s ease, backdrop-filter .35s ease; border-bottom:1px solid transparent;}
 #nav.scrolled{background:rgba(10,14,20,.85); backdrop-filter:blur(14px); border-color:var(--line);}
@@ -61,10 +88,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 .acc-item.open .chev{transform:rotate(45deg);}
 .chev{transition:transform .3s;}
 
-/* carousel */
-.carousel-track{transition:transform .5s cubic-bezier(.2,.8,.2,1);}
-
-.mono-num{font-family:'JetBrains Mono',monospace;}
 </style>
 </head>
 <body class="antialiased">
@@ -84,12 +107,12 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
       <a href="#books" class="navlink">Books</a>
       <a href="#mentorship" class="navlink">Mentorship</a>
       <a href="#premium" class="navlink">Premium</a>
-      <a href="#academy" class="navlink">Free Resources</a>
+      <a href="#community-resources" class="navlink">Free Resources</a>
       <a href="#contact" class="navlink">Contact</a>
     </nav>
-    <div class="hidden lg:flex items-center gap-3">
-      <a href="#" class="text-sm text-[var(--muted)] hover:text-white transition">Log in</a>
-      <a href="#" class="btn-primary text-sm px-4 py-2 rounded-lg">Sign up</a>
+    <div class="hidden lg:flex items-center gap-3" id="navAuthArea">
+      <button type="button" class="text-sm text-[var(--muted)] hover:text-white transition auth-open-btn" data-mode="login">Log in</button>
+      <button type="button" class="btn-primary text-sm px-4 py-2 rounded-lg auth-open-btn" data-mode="signup">Sign up</button>
     </div>
     <button id="mobileBtn" class="lg:hidden text-xl"><i class="fa-solid fa-bars"></i></button>
   </div>
@@ -99,11 +122,11 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <a href="#books" class="block navlink">Books</a>
     <a href="#mentorship" class="block navlink">Mentorship</a>
     <a href="#premium" class="block navlink">Premium</a>
-    <a href="#academy" class="block navlink">Free Resources</a>
+    <a href="#community-resources" class="block navlink">Free Resources</a>
     <a href="#contact" class="block navlink">Contact</a>
-    <div class="flex gap-3 pt-2">
-      <a href="#" class="flex-1 text-center btn-ghost rounded-lg py-2">Log in</a>
-      <a href="#" class="flex-1 text-center btn-primary rounded-lg py-2">Sign up</a>
+    <div class="flex gap-3 pt-2" id="navAuthAreaMobile">
+      <button type="button" class="flex-1 text-center btn-ghost rounded-lg py-2 auth-open-btn" data-mode="login">Log in</button>
+      <button type="button" class="flex-1 text-center btn-primary rounded-lg py-2 auth-open-btn" data-mode="signup">Sign up</button>
     </div>
   </div>
 </header>
@@ -122,11 +145,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <div class="flex flex-wrap justify-center gap-4 mt-9">
       <a href="#courses" class="btn-primary rounded-lg px-6 py-3.5 text-sm">Start Learning</a>
       <a href="#courses" class="btn-ghost rounded-lg px-6 py-3.5 text-sm">Explore Courses <i class="fa-solid fa-arrow-right ml-1"></i></a>
-    </div>
-    <div class="flex items-center justify-center gap-10 mt-14 hairline pt-8 max-w-lg mx-auto">
-      <div><div class="font-display text-2xl font-semibold mono-num">18,400+</div><div class="text-xs text-[var(--muted)] mt-1">Students taught</div></div>
-      <div><div class="font-display text-2xl font-semibold mono-num">4.9/5</div><div class="text-xs text-[var(--muted)] mt-1">Average rating</div></div>
-      <div><div class="font-display text-2xl font-semibold mono-num">120+</div><div class="text-xs text-[var(--muted)] mt-1">Hours of curriculum</div></div>
     </div>
   </div>
 </section>
@@ -177,72 +195,162 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
         <h3 class="font-display font-semibold text-lg mb-2">One-to-One Mentoring</h3>
         <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">60-minute focused session on strategy, mindset, or execution — tailored to you.</p>
         <div class="font-mono text-[var(--bull)] mb-5">₹2,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="One-to-One Mentoring" data-price="₹2,999">Select a Slot</button>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="One-to-One Mentoring">Select a Slot</button>
       </div>
       <div class="reveal panel rounded-2xl p-7 hover-lift">
         <i class="fa-solid fa-chart-pie text-[var(--bull)] text-xl mb-4"></i>
         <h3 class="font-display font-semibold text-lg mb-2">Portfolio Review</h3>
         <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">A full walk-through of your holdings, allocation, and risk exposure.</p>
         <div class="font-mono text-[var(--bull)] mb-5">₹3,499 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="Portfolio Review" data-price="₹3,499">Select a Slot</button>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="Portfolio Review">Select a Slot</button>
       </div>
       <div class="reveal panel rounded-2xl p-7 hover-lift">
         <i class="fa-solid fa-comments text-[var(--bull)] text-xl mb-4"></i>
         <h3 class="font-display font-semibold text-lg mb-2">Trading Consultation</h3>
         <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">Open-agenda call to troubleshoot whatever's blocking your progress.</p>
         <div class="font-mono text-[var(--bull)] mb-5">₹1,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="Trading Consultation" data-price="₹1,999">Select a Slot</button>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="Trading Consultation">Select a Slot</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= BOOKING MODAL ================= -->
-<div id="bookingModal" class="modal-overlay">
+<!-- ================= CHECKOUT MODAL (Enroll / Booking / Bookstore / Membership) ================= -->
+<div id="checkoutModal" class="modal-overlay">
   <div class="modal-card">
     <div class="p-6">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <div class="text-[10px] font-mono text-[var(--muted)]" id="modalStepLabel">STEP 1 OF 3</div>
-          <h3 class="font-display font-semibold text-lg mt-1" id="modalServiceName">Book a Session</h3>
+          <div class="text-[10px] font-mono text-[var(--muted)]" id="coStepLabel">CHECKOUT</div>
+          <h3 class="font-display font-semibold text-lg mt-1" id="coTitle">Checkout</h3>
         </div>
-        <button id="modalClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+        <button type="button" id="coClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
       </div>
 
-      <!-- STEP 1: date + time -->
-      <div id="stepDate">
-        <div class="text-xs text-[var(--muted)] mb-3">Choose a date</div>
-        <div class="grid grid-cols-4 gap-2 mb-6" id="dateGrid"></div>
-        <div class="text-xs text-[var(--muted)] mb-3">Available time slots · IST</div>
-        <div class="grid grid-cols-3 gap-2 mb-2" id="modalTimeGrid"></div>
-        <button id="toStepInfo" disabled class="w-full btn-primary rounded-lg py-2.5 text-sm mt-6 opacity-40 cursor-not-allowed">Continue</button>
+      <!-- STEP: slot (booking only) -->
+      <div id="coStepSlot" class="hidden">
+        <div class="text-xs text-[var(--muted)] mb-3">Available slot</div>
+        <button type="button" id="coSlotCard" class="slot-card w-full panel2 rounded-xl p-4 flex items-center justify-between text-left border border-transparent">
+          <div>
+            <div class="font-semibold text-sm">Next Sunday</div>
+            <div class="text-xs text-[var(--muted)] mt-1 font-mono">7:00 PM – 9:00 PM IST</div>
+          </div>
+          <i class="fa-solid fa-circle-check text-lg" style="color:var(--muted2)"></i>
+        </button>
+        <button type="button" id="coSlotContinue" disabled class="w-full btn-primary rounded-lg py-2.5 text-sm mt-5 opacity-40 cursor-not-allowed">
+          <span class="btn-label">Continue</span>
+        </button>
       </div>
 
-      <!-- STEP 2: contact info -->
-      <div id="stepInfo" class="hidden">
-        <div class="panel2 rounded-lg p-3 text-xs text-[var(--muted)] mb-5 flex items-center justify-between">
-          <span id="summaryLine">—</span>
-          <button id="backToDate" class="text-[var(--bull)] font-mono">Change</button>
-        </div>
-        <form id="bookingForm" class="space-y-4">
-          <div><label class="text-xs text-[var(--muted)]">Name</label><input required id="bkName" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Your name"></div>
-          <div><label class="text-xs text-[var(--muted)]">Email</label><input required type="email" id="bkEmail" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="you@email.com"></div>
-          <div><label class="text-xs text-[var(--muted)]">Phone</label><input required id="bkPhone" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="+91 98765 43210"></div>
-          <button type="submit" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-2">Confirm Booking</button>
+      <!-- STEP: email -->
+      <form id="coStepEmail" class="hidden">
+        <div class="panel2 rounded-lg p-3 text-xs text-[var(--muted)] mb-5" id="coSummaryLine"></div>
+        <label class="text-xs text-[var(--muted)]">Email Address</label>
+        <input id="coEmail" type="email" class="field-input" placeholder="you@email.com">
+        <p class="field-error" id="coEmailError">Please enter a valid email address.</p>
+        <button type="submit" id="coSubmitBtn" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-4">
+          <span class="btn-label">Continue</span>
+        </button>
+      </form>
+
+      <!-- STEP: processing -->
+      <div id="coStepProcessing" class="hidden text-center py-10">
+        <div class="spinner mx-auto mb-4" style="width:24px;height:24px; color:var(--bull); border-color:rgba(0,217,138,.25); border-top-color:var(--bull);"></div>
+        <p class="text-sm text-[var(--muted)]">Redirecting to secure payment…</p>
+      </div>
+
+      <!-- STEP: success -->
+      <div id="coStepSuccess" class="hidden text-center py-4">
+        <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center mb-5"><i class="fa-solid fa-check text-[#06120C] text-xl"></i></div>
+        <h4 class="font-display font-semibold text-lg mb-1">✅ Payment Successful</h4>
+        <p class="text-sm text-[var(--muted)] mb-6">Thank you for choosing TradingGuru.<br>A confirmation email has been sent.</p>
+        <button type="button" id="coReturnHome" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Return to Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= AUTH MODAL (Login / Sign Up) ================= -->
+<div id="authModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-display font-semibold text-lg" id="authTitle">Welcome back</h3>
+        <button type="button" id="authClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="authViewLogin" class="auth-view">
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="text-xs text-[var(--muted)]">Email or Phone Number</label>
+            <input id="loginId" class="field-input" placeholder="you@email.com or +91 98765 43210">
+            <p class="field-error" id="loginIdError">Enter a valid email or phone number.</p>
+          </div>
+          <div>
+            <label class="text-xs text-[var(--muted)]">Password</label>
+            <input id="loginPassword" type="password" class="field-input" placeholder="••••••••">
+            <p class="field-error" id="loginPasswordError">Password must be at least 6 characters.</p>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <label class="flex items-center gap-2 text-[var(--muted)]"><input type="checkbox" id="loginRemember" class="accent-[var(--bull)]"> Remember me</label>
+            <button type="button" id="forgotPasswordBtn" class="text-[var(--bull)] font-mono">Forgot Password?</button>
+          </div>
+          <p class="field-error text-[var(--bull)]" id="forgotPasswordMsg" style="color:var(--bull)">Password reset link sent — check your inbox.</p>
+          <button type="submit" id="loginSubmitBtn" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-1">
+            <span class="btn-label">Login</span>
+          </button>
+          <button type="button" id="toSignupBtn" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Create Account</button>
         </form>
       </div>
 
-      <!-- STEP 3: success -->
-      <div id="stepSuccess" class="hidden text-center py-4">
-        <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center mb-5"><i class="fa-solid fa-check text-[#06120C] text-xl"></i></div>
-        <h4 class="font-display font-semibold text-lg mb-1">Booking Confirmed</h4>
-        <p class="text-sm text-[var(--muted)] mb-5" id="successLine">Your session is scheduled.</p>
-        <div class="panel2 rounded-lg p-4 text-left text-sm space-y-1.5 mb-6">
-          <div class="flex justify-between"><span class="text-[var(--muted)]">Booking ID</span><span class="font-mono text-[var(--bull)]" id="bookingId">—</span></div>
-          <div class="flex justify-between"><span class="text-[var(--muted)]">Session</span><span id="successService">—</span></div>
-          <div class="flex justify-between"><span class="text-[var(--muted)]">Date &amp; Time</span><span id="successDatetime">—</span></div>
-        </div>
-        <button id="modalDone" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Done</button>
+      <!-- SIGNUP -->
+      <div id="authViewSignup" class="auth-view hidden">
+        <form id="signupForm" class="space-y-3.5">
+          <div>
+            <label class="text-xs text-[var(--muted)]">Full Name</label>
+            <input id="suName" class="field-input" placeholder="Your full name">
+            <p class="field-error" id="suNameError">Please enter your full name.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-[var(--muted)]">Age</label>
+              <input id="suAge" type="number" min="13" max="120" class="field-input" placeholder="25">
+              <p class="field-error" id="suAgeError">Enter a valid age (13+).</p>
+            </div>
+            <div>
+              <label class="text-xs text-[var(--muted)]">Occupation</label>
+              <input id="suOccupation" class="field-input" placeholder="e.g. Engineer">
+              <p class="field-error" id="suOccupationError">Required.</p>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-[var(--muted)]">Email Address</label>
+            <input id="suEmail" type="email" class="field-input" placeholder="you@email.com">
+            <p class="field-error" id="suEmailError">Please enter a valid email address.</p>
+          </div>
+          <div>
+            <label class="text-xs text-[var(--muted)]">Phone Number</label>
+            <input id="suPhone" class="field-input" placeholder="+91 98765 43210">
+            <p class="field-error" id="suPhoneError">Please enter a valid phone number.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-[var(--muted)]">Password</label>
+              <input id="suPassword" type="password" class="field-input" placeholder="••••••••">
+              <p class="field-error" id="suPasswordError">Min. 6 characters.</p>
+            </div>
+            <div>
+              <label class="text-xs text-[var(--muted)]">Confirm Password</label>
+              <input id="suConfirm" type="password" class="field-input" placeholder="••••••••">
+              <p class="field-error" id="suConfirmError">Passwords don't match.</p>
+            </div>
+          </div>
+          <button type="submit" id="signupSubmitBtn" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-1">
+            <span class="btn-label">Create Account</span>
+          </button>
+          <button type="button" id="toLoginBtn" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Already have an account? Log in</button>
+        </form>
       </div>
     </div>
   </div>
@@ -283,7 +391,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Community access</li>
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Monthly Q&amp;A</li>
         </ul>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-8">Join Now</button>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-8 checkout-btn" data-type="membership" data-title="Starter Plan">Join Now</button>
       </div>
       <div class="reveal rounded-2xl p-8 hover-lift relative" style="background:linear-gradient(180deg, rgba(0,217,138,.10), transparent); border:1px solid rgba(0,217,138,.4);">
         <span class="absolute -top-3 left-8 grad-bull text-[#06120C] text-[10px] font-mono font-semibold px-3 py-1 rounded-full">MOST POPULAR</span>
@@ -295,7 +403,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Portfolio reviews</li>
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Weekly assignments</li>
         </ul>
-        <button class="w-full btn-primary rounded-lg py-2.5 text-sm mt-8">Join Now</button>
+        <button class="w-full btn-primary rounded-lg py-2.5 text-sm mt-8 checkout-btn" data-type="membership" data-title="Professional Plan">Join Now</button>
       </div>
     </div>
   </div>
@@ -328,15 +436,20 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 </section>
 
 <!-- ================= COMMUNITY / SOCIAL ================= -->
-<section class="py-24 px-6 lg:px-10">
+<section id="community-resources" class="py-24 px-6 lg:px-10 scroll-mt-28">
   <div class="max-w-7xl mx-auto space-y-20">
+    <div class="text-center max-w-xl mx-auto reveal">
+      <span class="eyebrow">Community</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Free Community Resources</h2>
+      <p class="text-[var(--muted)] mt-4">No cost, no login — just follow along wherever you already are.</p>
+    </div>
 
     <div class="grid md:grid-cols-2 gap-8 items-center reveal">
       <div class="panel rounded-2xl p-8">
         <i class="fa-brands fa-telegram text-3xl mb-4" style="color:#34AADF"></i>
-        <h3 class="font-display text-2xl font-semibold">Free Telegram Community</h3>
+        <h3 class="font-display text-2xl font-semibold">📱 Telegram Community</h3>
         <p class="text-sm text-[var(--muted)] mt-3 leading-relaxed">Daily market updates, educational content, free trading ideas, market news, and honest discussion — no cost, no spam.</p>
-        <a href="#" class="btn-ghost rounded-lg px-5 py-2.5 text-sm inline-block mt-6">Join Telegram</a>
+        <button type="button" class="btn-ghost rounded-lg px-5 py-2.5 text-sm inline-block mt-6 telegram-join-btn">Join Telegram</button>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">📈 Daily Market Updates</div>
@@ -349,7 +462,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <div class="grid lg:grid-cols-2 gap-8">
       <div class="reveal">
         <div class="flex items-center justify-between mb-5">
-          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-instagram mr-2" style="color:#E1306C"></i>Instagram</h3>
+          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-instagram mr-2" style="color:#E1306C"></i>📸 Instagram</h3>
           <a href="#" class="text-xs font-mono text-[var(--bull)]">Follow Instagram →</a>
         </div>
         <div class="grid grid-cols-3 gap-3">
@@ -360,7 +473,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
       </div>
       <div class="reveal">
         <div class="flex items-center justify-between mb-5">
-          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-youtube mr-2" style="color:#FF0000"></i>YouTube</h3>
+          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-youtube mr-2" style="color:#FF0000"></i>▶️ YouTube</h3>
           <a href="#" class="text-xs font-mono text-[var(--bull)]">Subscribe →</a>
         </div>
         <div class="space-y-3">
@@ -370,18 +483,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ================= TESTIMONIALS ================= -->
-<section class="py-24 px-6 lg:px-10 panel2 border-y border-[var(--line)] overflow-hidden">
-  <div class="max-w-4xl mx-auto text-center reveal">
-    <span class="eyebrow">Testimonials</span>
-    <h2 class="font-display text-3xl font-semibold mt-4">Traders who did the work</h2>
-  </div>
-  <div class="max-w-3xl mx-auto mt-12 overflow-hidden relative">
-    <div id="testiTrack" class="carousel-track flex"></div>
-    <div class="flex justify-center gap-2 mt-6" id="testiDots"></div>
   </div>
 </section>
 
@@ -445,7 +546,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
         <li><a href="#books" class="hover:text-white transition">Books</a></li>
         <li><a href="#mentorship" class="hover:text-white transition">Mentorship</a></li>
         <li><a href="#premium" class="hover:text-white transition">Premium</a></li>
-        <li><a href="#academy" class="hover:text-white transition">Resources</a></li>
+        <li><a href="#community-resources" class="hover:text-white transition">Resources</a></li>
         <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
       </ul>
     </div>
@@ -471,7 +572,114 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <span>© 2026 TradingGuru. All rights reserved.</span>
     <span>Trading involves risk. Education only, not financial advice.</span>
   </div>
+  <div class="max-w-7xl mx-auto text-center mt-3">
+    <button type="button" id="openAdminBtn" class="text-[10px] font-mono text-[var(--muted2)] hover:text-[var(--muted)] transition">Admin Dashboard</button>
+  </div>
 </footer>
+
+<!-- ================= TELEGRAM JOIN MODAL ================= -->
+<div id="telegramModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <div class="text-[10px] font-mono text-[var(--muted)]" id="tgStepLabel">JOIN TELEGRAM COMMUNITY</div>
+          <h3 class="font-display font-semibold text-lg mt-1">Telegram Community Access</h3>
+        </div>
+        <button type="button" id="tgClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <!-- STEP: details form -->
+      <form id="tgForm" class="space-y-3.5">
+        <div>
+          <label class="text-xs text-[var(--muted)]">Full Name</label>
+          <input id="tgName" class="field-input" placeholder="Your full name">
+          <p class="field-error" id="tgNameError">Please enter your full name.</p>
+        </div>
+        <div>
+          <label class="text-xs text-[var(--muted)]">Email Address</label>
+          <input id="tgEmail" type="email" class="field-input" placeholder="you@email.com">
+          <p class="field-error" id="tgEmailError">Please enter a valid email address.</p>
+        </div>
+        <div>
+          <label class="text-xs text-[var(--muted)]">Phone Number</label>
+          <input id="tgPhone" class="field-input" placeholder="+91 98765 43210">
+          <p class="field-error" id="tgPhoneError">Please enter a valid phone number.</p>
+        </div>
+        <div>
+          <label class="text-xs text-[var(--muted)]">Telegram Username</label>
+          <input id="tgUsername" class="field-input" placeholder="@yourusername">
+          <p class="field-error" id="tgUsernameError">Enter a valid @username (5+ characters).</p>
+        </div>
+        <button type="submit" id="tgContinueBtn" disabled class="w-full btn-primary rounded-lg py-2.5 text-sm mt-2 opacity-40 cursor-not-allowed">
+          <span class="btn-label">Continue to Payment</span>
+        </button>
+      </form>
+
+      <!-- STEP: payment -->
+      <div id="tgStepPayment" class="hidden">
+        <div class="panel2 rounded-lg p-4 text-sm space-y-1.5 mb-5">
+          <div class="flex justify-between"><span class="text-[var(--muted)]">Membership</span><span>Telegram Community</span></div>
+          <div class="flex justify-between"><span class="text-[var(--muted)]">Amount</span><span class="font-mono text-[var(--bull)]">₹499</span></div>
+        </div>
+        <button type="button" id="tgPayBtn" class="w-full btn-primary rounded-lg py-2.5 text-sm">
+          <span class="btn-label">Pay ₹499 &amp; Join</span>
+        </button>
+        <button type="button" id="tgEditDetails" class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-3">Edit Details</button>
+      </div>
+
+      <!-- STEP: processing -->
+      <div id="tgStepProcessing" class="hidden text-center py-10">
+        <div class="spinner mx-auto mb-4" style="width:24px;height:24px; color:var(--bull); border-color:rgba(0,217,138,.25); border-top-color:var(--bull);"></div>
+        <p class="text-sm text-[var(--muted)]">Processing payment…</p>
+      </div>
+
+      <!-- STEP: success -->
+      <div id="tgStepSuccess" class="hidden text-center py-4">
+        <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center mb-5"><i class="fa-solid fa-check text-[#06120C] text-xl"></i></div>
+        <h4 class="font-display font-semibold text-lg mb-2">Payment Successful!</h4>
+        <p class="text-sm text-[var(--muted)] mb-6 leading-relaxed">Your request has been received. Our team will verify your payment and provide Telegram community access shortly.</p>
+        <button type="button" id="tgDone" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Done</button>
+      </div>
+
+      <!-- STEP: failure -->
+      <div id="tgStepFailure" class="hidden text-center py-4">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-5 mx-auto" style="background:rgba(255,92,92,.15); border:1px solid rgba(255,92,92,.4);"><i class="fa-solid fa-xmark text-[var(--bear)] text-xl"></i></div>
+        <h4 class="font-display font-semibold text-lg mb-2">Payment Failed</h4>
+        <p class="text-sm text-[var(--muted)] mb-6 leading-relaxed">Your payment could not be completed or was cancelled. No charges were made — you can retry without re-entering your details.</p>
+        <button type="button" id="tgRetry" class="w-full btn-primary rounded-lg py-2.5 text-sm">Retry Payment</button>
+        <button type="button" id="tgFailEdit" class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-3">Edit Details</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ADMIN DASHBOARD (demo, local session only) ================= -->
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-card" style="max-width:720px;">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <div class="text-[10px] font-mono text-[var(--muted)]">ADMIN</div>
+          <h3 class="font-display font-semibold text-lg mt-1">Telegram Community — Members</h3>
+        </div>
+        <button type="button" id="adminClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+      <p class="text-xs text-[var(--muted)] mb-4">Demo view only — stored in this browser session, not a real database.</p>
+      <div class="overflow-x-auto rounded-lg border border-[var(--line)]">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="panel2 text-left text-[var(--muted)] font-mono uppercase tracking-wide">
+              <th class="p-3">User ID</th><th class="p-3">Name</th><th class="p-3">Email</th><th class="p-3">Phone</th><th class="p-3">Telegram</th><th class="p-3">Status</th><th class="p-3">Date &amp; Time</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody"></tbody>
+        </table>
+      </div>
+      <div id="adminEmptyState" class="text-center text-sm text-[var(--muted)] py-10 hidden">No members yet — successful Telegram joins will appear here.</div>
+    </div>
+  </div>
+</div>
 
 <script>
 // nav scroll state
@@ -482,6 +690,28 @@ window.addEventListener('scroll', ()=> nav.classList.toggle('scrolled', window.s
 const mobileBtn = document.getElementById('mobileBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 mobileBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+
+// ===== Offset-aware instant scroll for in-page nav links (desktop + mobile + footer) =====
+function smoothScrollToHash(hash){
+  const target = document.querySelector(hash);
+  if(!target) return;
+  const navOffset = nav.offsetHeight + 24; // keep section title clear of the fixed navbar
+  const targetY = target.getBoundingClientRect().top + window.pageYOffset - navOffset;
+  if(Math.abs(window.pageYOffset - targetY) < 2) return; // already there — do nothing
+  window.scrollTo(0, targetY);
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  const hash = a.getAttribute('href');
+  if(hash.length > 1){
+    a.addEventListener('click', (e)=>{
+      if(document.querySelector(hash)){
+        e.preventDefault();
+        smoothScrollToHash(hash);
+        mobileMenu.classList.add('hidden');
+      }
+    });
+  }
+});
 
 // reveal on scroll
 const io = new IntersectionObserver((entries)=>{
@@ -511,7 +741,7 @@ document.getElementById('courseGrid').innerHTML = courses.map(c=>`
       <p class="text-xs text-[var(--muted)] leading-relaxed flex-1">${c.desc}</p>
       <div class="flex items-center justify-between mt-4 pt-4 hairline">
         <span class="font-mono text-[var(--bull)] font-semibold">${c.price}</span>
-        <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">Enroll</button>
+        <button class="btn-primary rounded-lg px-3 py-1.5 text-xs checkout-btn" data-type="enroll" data-title="${c.t}">Enroll</button>
       </div>
     </div>
   </div>`).join('');
@@ -531,138 +761,266 @@ document.getElementById('bookGrid').innerHTML = books.map(b=>`
     <div class="text-xs text-[var(--muted)] mb-4">${b.a}</div>
     <div class="flex items-center justify-between">
       <span class="font-mono text-[var(--bull)] font-semibold text-sm">${b.price}</span>
-      <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">Buy Now</button>
+      <button class="btn-primary rounded-lg px-3 py-1.5 text-xs checkout-btn" data-type="bookstore" data-title="${b.t}">Buy Now</button>
     </div>
   </div>`).join('');
 document.querySelectorAll('#bookGrid .reveal').forEach(el=>io.observe(el));
 
-// ===== Booking modal logic =====
+// ===== Reusable payment layer =====
+// PaymentService: placeholder gateway logic. Swap redirectToPayment's internals
+// with a real provider later (Razorpay / Stripe / Cashfree / PhonePe / PayU).
+const PaymentService = {
+  redirectToPayment(order){
+    // order: {type, title/email/etc.}
+    // In production this would build a gateway session and do:
+    //   window.location.href = gatewayCheckoutUrl;
+    // For now we simulate the network + redirect round trip, including an
+    // occasional failure so the retry/error UI can be exercised realistically.
+    return new Promise((resolve, reject)=>{
+      setTimeout(()=>{
+        const success = Math.random() > 0.18; // ~82% simulated success rate
+        if(success) resolve({ok:true, orderId:'PAY-'+Math.random().toString(36).slice(2,8).toUpperCase()});
+        else reject(new Error('Payment declined or cancelled by user'));
+      }, 1300);
+    });
+  }
+};
+
+function setBtnLoading(btn, loading){
+  btn.disabled = loading;
+  btn.classList.toggle('btn-loading', loading);
+  if(loading && !btn.querySelector('.spinner')){
+    const sp = document.createElement('span');
+    sp.className='spinner';
+    sp.style.color = btn.classList.contains('btn-primary') ? '#06120C' : 'var(--text)';
+    btn.appendChild(sp);
+  } else if(!loading){
+    const sp = btn.querySelector('.spinner');
+    if(sp) sp.remove();
+  }
+}
+function showFieldError(inputEl, errorEl, show){
+  inputEl.classList.toggle('invalid', show);
+  errorEl.classList.toggle('show', show);
+}
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+function isValidPhone(v){ return /^[+]?[\d\s-]{8,15}$/.test(v.trim()); }
+function isEmailOrPhone(v){ return isValidEmail(v) || isValidPhone(v); }
+
+// ===== Checkout modal (Enroll / Booking / Bookstore / Membership) =====
 (function(){
-  const overlay = document.getElementById('bookingModal');
-  const stepDate = document.getElementById('stepDate');
-  const stepInfo = document.getElementById('stepInfo');
-  const stepSuccess = document.getElementById('stepSuccess');
-  const stepLabel = document.getElementById('modalStepLabel');
-  const serviceNameEl = document.getElementById('modalServiceName');
-  const dateGrid = document.getElementById('dateGrid');
-  const timeGrid = document.getElementById('modalTimeGrid');
-  const toStepInfo = document.getElementById('toStepInfo');
-  const summaryLine = document.getElementById('summaryLine');
+  const overlay = document.getElementById('checkoutModal');
+  const stepLabel = document.getElementById('coStepLabel');
+  const titleEl = document.getElementById('coTitle');
+  const stepSlot = document.getElementById('coStepSlot');
+  const slotCard = document.getElementById('coSlotCard');
+  const slotContinue = document.getElementById('coSlotContinue');
+  const stepEmail = document.getElementById('coStepEmail');
+  const summaryLine = document.getElementById('coSummaryLine');
+  const emailInput = document.getElementById('coEmail');
+  const emailError = document.getElementById('coEmailError');
+  const submitBtn = document.getElementById('coSubmitBtn');
+  const stepProcessing = document.getElementById('coStepProcessing');
+  const stepSuccess = document.getElementById('coStepSuccess');
 
-  let ctx = {service:'', price:'', date:null, dateLabel:'', time:null};
+  let order = {type:'', title:'', email:'', slotChosen:false};
 
-  function buildDates(){
-    const days = [];
-    const now = new Date();
-    for(let i=1;i<=8;i++){
-      const d = new Date(now); d.setDate(now.getDate()+i);
-      days.push(d);
+  function resetSteps(){
+    [stepSlot, stepEmail, stepProcessing, stepSuccess].forEach(el=>el.classList.add('hidden'));
+    emailInput.value=''; showFieldError(emailInput, emailError, false);
+    slotCard.classList.remove('active');
+    slotContinue.disabled = true;
+    slotContinue.classList.add('opacity-40','cursor-not-allowed');
+    order.slotChosen = false;
+  }
+
+  function open(type, title){
+    order = {type, title, email:'', slotChosen:false};
+    titleEl.textContent = title || 'Checkout';
+    resetSteps();
+    if(type === 'booking'){
+      stepLabel.textContent = 'STEP 1 OF 2 · SELECT SLOT';
+      stepSlot.classList.remove('hidden');
+    } else {
+      stepLabel.textContent = 'CHECKOUT';
+      summaryLine.textContent = title;
+      submitBtn.querySelector('.btn-label').textContent = type === 'enroll' ? 'Continue' : 'Proceed to Payment';
+      stepEmail.classList.remove('hidden');
     }
-    dateGrid.innerHTML = days.map((d,i)=>{
-      const label = d.toLocaleDateString('en-IN',{weekday:'short'});
-      const num = d.getDate();
-      return `<button type="button" class="date-pill panel2 rounded-lg py-2.5 text-xs flex flex-col items-center gap-1 border border-transparent" data-i="${i}">
-        <span class="text-[10px] text-[var(--muted)]">${label}</span><span class="font-mono font-semibold">${num}</span>
-      </button>`;
-    }).join('');
-    dateGrid.querySelectorAll('.date-pill').forEach((btn,i)=>{
-      btn.addEventListener('click',()=>{
-        dateGrid.querySelectorAll('.date-pill').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        ctx.date = days[i];
-        ctx.dateLabel = days[i].toLocaleDateString('en-IN',{weekday:'short', day:'numeric', month:'short'});
-        checkStep1();
-      });
-    });
-  }
-
-  function buildTimes(){
-    const times = ['9:00 AM','11:30 AM','1:00 PM','3:30 PM','5:00 PM','7:00 PM'];
-    timeGrid.innerHTML = times.map(t=>`<button type="button" class="time-pill panel2 rounded-lg py-2 text-xs font-mono border border-transparent">${t}</button>`).join('');
-    timeGrid.querySelectorAll('.time-pill').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        timeGrid.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        ctx.time = btn.textContent;
-        checkStep1();
-      });
-    });
-  }
-
-  function checkStep1(){
-    const ready = ctx.date && ctx.time;
-    toStepInfo.disabled = !ready;
-    toStepInfo.classList.toggle('opacity-40', !ready);
-    toStepInfo.classList.toggle('cursor-not-allowed', !ready);
-  }
-
-  function openModal(service, price){
-    ctx = {service, price, date:null, dateLabel:'', time:null};
-    serviceNameEl.textContent = service;
-    stepDate.classList.remove('hidden'); stepInfo.classList.add('hidden'); stepSuccess.classList.add('hidden');
-    stepLabel.textContent = 'STEP 1 OF 3 · CHOOSE DATE & TIME';
-    buildDates(); buildTimes(); checkStep1();
     overlay.classList.add('open');
     document.body.style.overflow='hidden';
   }
-  function closeModal(){
+  function close(){
     overlay.classList.remove('open');
     document.body.style.overflow='';
   }
 
-  document.querySelectorAll('.book-btn').forEach(btn=>{
-    btn.addEventListener('click',()=> openModal(btn.dataset.service, btn.dataset.price));
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.checkout-btn');
+    if(btn) open(btn.dataset.type, btn.dataset.title);
   });
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  document.getElementById('modalDone').addEventListener('click', closeModal);
-  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
-
-  toStepInfo.addEventListener('click', ()=>{
-    stepDate.classList.add('hidden'); stepInfo.classList.remove('hidden');
-    stepLabel.textContent = 'STEP 2 OF 3 · YOUR DETAILS';
-    summaryLine.textContent = `${ctx.service} · ${ctx.dateLabel} · ${ctx.time}`;
-  });
-  document.getElementById('backToDate').addEventListener('click', ()=>{
-    stepInfo.classList.add('hidden'); stepDate.classList.remove('hidden');
-    stepLabel.textContent = 'STEP 1 OF 3 · CHOOSE DATE & TIME';
+  document.getElementById('coClose').addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+  document.getElementById('coReturnHome').addEventListener('click', ()=>{
+    close();
+    document.querySelector('#home').scrollIntoView();
   });
 
-  document.getElementById('bookingForm').addEventListener('submit', (e)=>{
+  slotCard.addEventListener('click', ()=>{
+    slotCard.classList.add('active');
+    order.slotChosen = true;
+    slotContinue.disabled = false;
+    slotContinue.classList.remove('opacity-40','cursor-not-allowed');
+  });
+  slotContinue.addEventListener('click', ()=>{
+    stepSlot.classList.add('hidden');
+    stepLabel.textContent = 'STEP 2 OF 2 · EMAIL';
+    summaryLine.textContent = `${order.title} · Next Sunday · 7:00 PM – 9:00 PM IST`;
+    submitBtn.querySelector('.btn-label').textContent = 'Proceed to Payment';
+    stepEmail.classList.remove('hidden');
+  });
+
+  stepEmail.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const id = 'TG-' + Math.random().toString(36).slice(2,6).toUpperCase() + '-' + Math.floor(1000+Math.random()*9000);
-    document.getElementById('bookingId').textContent = id;
-    document.getElementById('successService').textContent = `${ctx.service} (${ctx.price})`;
-    document.getElementById('successDatetime').textContent = `${ctx.dateLabel} · ${ctx.time} IST`;
-    document.getElementById('successLine').textContent = `A Zoom link will be emailed to you before the session.`;
-    stepInfo.classList.add('hidden'); stepSuccess.classList.remove('hidden');
-    stepLabel.textContent = 'STEP 3 OF 3 · CONFIRMED';
+    const valid = isValidEmail(emailInput.value);
+    showFieldError(emailInput, emailError, !valid);
+    if(!valid) return;
+    order.email = emailInput.value.trim();
+
+    setBtnLoading(submitBtn, true);
+    stepEmail.classList.add('hidden');
+    stepProcessing.classList.remove('hidden');
+    stepLabel.textContent = 'PROCESSING';
+
+    try{
+      await PaymentService.redirectToPayment(order);
+      stepProcessing.classList.add('hidden');
+      stepSuccess.classList.remove('hidden');
+      stepLabel.textContent = 'CONFIRMED';
+    }catch(err){
+      stepProcessing.classList.add('hidden');
+      stepEmail.classList.remove('hidden');
+      emailError.textContent = 'Something went wrong. Please try again.';
+      showFieldError(emailInput, emailError, true);
+    }finally{
+      setBtnLoading(submitBtn, false);
+    }
   });
 })();
 
-// testimonials
-const testis = [
-  {n:'Arjun Mehta', o:'Software Engineer', r:5, rev:'Went from randomly buying stocks to actually having a plan. The risk management module alone paid for itself.'},
-  {n:'Priya Nair', o:'Marketing Manager', r:5, rev:'The mentorship calls kept me accountable. I finally stopped revenge trading after losses.'},
-  {n:'Rohit Sharma', o:'Business Owner', r:4, rev:"Options trading course was dense but thorough. Wish I'd found this two years earlier."},
-];
-function initial(n){return n.split(' ').map(x=>x[0]).join('');}
-document.getElementById('testiTrack').innerHTML = testis.map(t=>`
-  <div class="w-full shrink-0 px-2">
-    <div class="panel rounded-2xl p-8 text-center">
-      <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center font-display font-semibold text-[#06120C]">${initial(t.n)}</div>
-      <div class="text-[var(--gold)] mt-4 text-sm">${'★'.repeat(t.r)}${'☆'.repeat(5-t.r)}</div>
-      <p class="text-sm text-[var(--muted)] mt-4 leading-relaxed max-w-lg mx-auto">"${t.rev}"</p>
-      <div class="mt-5 font-semibold text-sm">${t.n}</div>
-      <div class="text-xs text-[var(--muted)]">${t.o}</div>
-    </div>
-  </div>`).join('');
-let ti=0;
-const dots = document.getElementById('testiDots');
-dots.innerHTML = testis.map((_,i)=>`<button class="w-2 h-2 rounded-full ${i===0?'bg-[var(--bull)]':'bg-[var(--line)]'} testi-dot" data-i="${i}"></button>`).join('');
-function goTesti(i){ ti=i; document.getElementById('testiTrack').style.transform=`translateX(-${i*100}%)`;
-  document.querySelectorAll('.testi-dot').forEach((d,j)=>d.className=`w-2 h-2 rounded-full testi-dot ${j===i?'bg-[var(--bull)]':'bg-[var(--line)]'}`);}
-document.querySelectorAll('.testi-dot').forEach(d=>d.addEventListener('click',()=>goTesti(+d.dataset.i)));
-setInterval(()=>goTesti((ti+1)%testis.length), 5000);
+// ===== Auth modal (Login / Sign Up) =====
+(function(){
+  const overlay = document.getElementById('authModal');
+  const title = document.getElementById('authTitle');
+  const viewLogin = document.getElementById('authViewLogin');
+  const viewSignup = document.getElementById('authViewSignup');
+
+  const loginForm = document.getElementById('loginForm');
+  const loginId = document.getElementById('loginId');
+  const loginIdError = document.getElementById('loginIdError');
+  const loginPassword = document.getElementById('loginPassword');
+  const loginPasswordError = document.getElementById('loginPasswordError');
+  const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+  const forgotBtn = document.getElementById('forgotPasswordBtn');
+  const forgotMsg = document.getElementById('forgotPasswordMsg');
+
+  const signupForm = document.getElementById('signupForm');
+  const suName = document.getElementById('suName'), suNameError = document.getElementById('suNameError');
+  const suAge = document.getElementById('suAge'), suAgeError = document.getElementById('suAgeError');
+  const suOccupation = document.getElementById('suOccupation'), suOccupationError = document.getElementById('suOccupationError');
+  const suEmail = document.getElementById('suEmail'), suEmailError = document.getElementById('suEmailError');
+  const suPhone = document.getElementById('suPhone'), suPhoneError = document.getElementById('suPhoneError');
+  const suPassword = document.getElementById('suPassword'), suPasswordError = document.getElementById('suPasswordError');
+  const suConfirm = document.getElementById('suConfirm'), suConfirmError = document.getElementById('suConfirmError');
+  const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+
+  let currentUser = null;
+
+  function showMode(mode){
+    title.textContent = mode==='login' ? 'Welcome back' : 'Create your account';
+    viewLogin.classList.toggle('hidden', mode!=='login');
+    viewSignup.classList.toggle('hidden', mode!=='signup');
+    forgotMsg.classList.remove('show');
+  }
+  function open(mode){
+    showMode(mode || 'login');
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  function updateNavForUser(name){
+    const label = `Hi, ${name.split(' ')[0]}`;
+    const desktopHTML = `<span class="text-sm text-[var(--text)] font-medium">${label}</span><button type="button" id="logoutBtn" class="btn-ghost text-sm px-4 py-2 rounded-lg">Log out</button>`;
+    document.getElementById('navAuthArea').innerHTML = desktopHTML;
+    document.getElementById('navAuthAreaMobile').innerHTML = `<button type="button" id="logoutBtnMobile" class="w-full text-center btn-ghost rounded-lg py-2">Log out (${label})</button>`;
+    document.getElementById('logoutBtn')?.addEventListener('click', logout);
+    document.getElementById('logoutBtnMobile')?.addEventListener('click', logout);
+  }
+  function logout(){
+    currentUser = null;
+    location.reload();
+  }
+
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.auth-open-btn');
+    if(btn) open(btn.dataset.mode);
+  });
+  document.getElementById('authClose').addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+  document.getElementById('toSignupBtn').addEventListener('click', ()=> showMode('signup'));
+  document.getElementById('toLoginBtn').addEventListener('click', ()=> showMode('login'));
+
+  forgotBtn.addEventListener('click', ()=>{
+    forgotMsg.classList.add('show');
+  });
+
+  loginForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const idValid = isEmailOrPhone(loginId.value);
+    const pwValid = loginPassword.value.length >= 6;
+    showFieldError(loginId, loginIdError, !idValid);
+    showFieldError(loginPassword, loginPasswordError, !pwValid);
+    if(!idValid || !pwValid) return;
+
+    setBtnLoading(loginSubmitBtn, true);
+    await new Promise(r=>setTimeout(r, 900));
+    setBtnLoading(loginSubmitBtn, false);
+
+    const namePart = loginId.value.includes('@') ? loginId.value.split('@')[0] : 'Trader';
+    currentUser = {name: namePart};
+    updateNavForUser(currentUser.name);
+    close();
+    document.querySelector('#home').scrollIntoView();
+  });
+
+  signupForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const checks = [
+      [suName, suNameError, suName.value.trim().length >= 2],
+      [suAge, suAgeError, +suAge.value >= 13 && +suAge.value <= 120],
+      [suOccupation, suOccupationError, suOccupation.value.trim().length >= 2],
+      [suEmail, suEmailError, isValidEmail(suEmail.value)],
+      [suPhone, suPhoneError, isValidPhone(suPhone.value)],
+      [suPassword, suPasswordError, suPassword.value.length >= 6],
+      [suConfirm, suConfirmError, suConfirm.value === suPassword.value && suConfirm.value.length >= 6],
+    ];
+    let allValid = true;
+    checks.forEach(([input, errEl, valid])=>{ showFieldError(input, errEl, !valid); if(!valid) allValid=false; });
+    if(!allValid) return;
+
+    setBtnLoading(signupSubmitBtn, true);
+    await new Promise(r=>setTimeout(r, 1000));
+    setBtnLoading(signupSubmitBtn, false);
+
+    currentUser = {name: suName.value.trim()};
+    updateNavForUser(currentUser.name);
+    close();
+    document.querySelector('#home').scrollIntoView();
+  });
+})();
 
 // FAQ
 const faqs = [
@@ -681,6 +1039,166 @@ document.getElementById('faqList').innerHTML = faqs.map((f,i)=>`
 document.querySelectorAll('.acc-head').forEach(h=>h.addEventListener('click',()=>{
   h.closest('.acc-item').classList.toggle('open');
 }));
+
+// ===== Admin "database" (demo, in-memory for this browser session) =====
+// In production this data would be written by the payment webhook to a real
+// backend/database, not stored client-side.
+const AdminDB = {
+  members: [],
+  add(record){ this.members.unshift(record); AdminUI.render(); }
+};
+let memberSeq = 1000;
+
+const AdminUI = (function(){
+  const overlay = document.getElementById('adminModal');
+  const tbody = document.getElementById('adminTableBody');
+  const empty = document.getElementById('adminEmptyState');
+  function render(){
+    if(AdminDB.members.length === 0){
+      tbody.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+    tbody.innerHTML = AdminDB.members.map(m=>`
+      <tr>
+        <td class="font-mono text-[var(--bull)]">${m.userId}</td>
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.phone}</td>
+        <td>${m.telegram}</td>
+        <td><span class="status-pill status-${m.status}">${m.status === 'paid' ? 'Payment Received' : 'Pending Verification'}</span></td>
+        <td class="font-mono">${m.datetime}</td>
+      </tr>`).join('');
+  }
+  function open(){ overlay.classList.add('open'); document.body.style.overflow='hidden'; render(); }
+  function close(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('openAdminBtn').addEventListener('click', open);
+  document.getElementById('adminClose').addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+  return {render};
+})();
+
+// ===== Telegram Community join flow =====
+(function(){
+  const overlay = document.getElementById('telegramModal');
+  const stepLabel = document.getElementById('tgStepLabel');
+  const form = document.getElementById('tgForm');
+  const name = document.getElementById('tgName'), nameErr = document.getElementById('tgNameError');
+  const email = document.getElementById('tgEmail'), emailErr = document.getElementById('tgEmailError');
+  const phone = document.getElementById('tgPhone'), phoneErr = document.getElementById('tgPhoneError');
+  const username = document.getElementById('tgUsername'), usernameErr = document.getElementById('tgUsernameError');
+  const continueBtn = document.getElementById('tgContinueBtn');
+
+  const stepPayment = document.getElementById('tgStepPayment');
+  const payBtn = document.getElementById('tgPayBtn');
+  const editDetailsBtn = document.getElementById('tgEditDetails');
+
+  const stepProcessing = document.getElementById('tgStepProcessing');
+  const stepSuccess = document.getElementById('tgStepSuccess');
+  const stepFailure = document.getElementById('tgStepFailure');
+  const retryBtn = document.getElementById('tgRetry');
+  const failEditBtn = document.getElementById('tgFailEdit');
+
+  let order = null; // retains validated details across retry, per spec (no re-entering info)
+
+  function fieldChecks(){
+    return {
+      name: name.value.trim().length >= 2,
+      email: isValidEmail(email.value),
+      phone: isValidPhone(phone.value),
+      username: /^@?[a-zA-Z0-9_]{5,}$/.test(username.value.trim()),
+    };
+  }
+  function refreshContinueState(){
+    const c = fieldChecks();
+    const allValid = c.name && c.email && c.phone && c.username;
+    continueBtn.disabled = !allValid;
+    continueBtn.classList.toggle('opacity-40', !allValid);
+    continueBtn.classList.toggle('cursor-not-allowed', !allValid);
+    return c;
+  }
+  [name,email,phone,username].forEach(inp=> inp.addEventListener('input', refreshContinueState));
+
+  function showStep(step){
+    [form, stepPayment, stepProcessing, stepSuccess, stepFailure].forEach(el=> el.classList.add('hidden'));
+    step.classList.remove('hidden');
+  }
+
+  function open(){
+    order = null;
+    form.reset();
+    [name,email,phone,username].forEach(i=>i.classList.remove('invalid'));
+    [nameErr,emailErr,phoneErr,usernameErr].forEach(e=>e.classList.remove('show'));
+    refreshContinueState();
+    stepLabel.textContent = 'STEP 1 OF 2 · YOUR DETAILS';
+    showStep(form);
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  document.querySelectorAll('.telegram-join-btn').forEach(btn=> btn.addEventListener('click', open));
+  document.getElementById('tgClose').addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+  document.getElementById('tgDone').addEventListener('click', close);
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const c = fieldChecks();
+    showFieldError(name, nameErr, !c.name);
+    showFieldError(email, emailErr, !c.email);
+    showFieldError(phone, phoneErr, !c.phone);
+    showFieldError(username, usernameErr, !c.username);
+    if(!c.name || !c.email || !c.phone || !c.username) return;
+
+    order = {
+      name: name.value.trim(),
+      email: email.value.trim(),
+      phone: phone.value.trim(),
+      telegram: username.value.trim().startsWith('@') ? username.value.trim() : '@'+username.value.trim(),
+    };
+    stepLabel.textContent = 'STEP 2 OF 2 · PAYMENT';
+    showStep(stepPayment);
+  });
+
+  editDetailsBtn.addEventListener('click', ()=>{
+    stepLabel.textContent = 'STEP 1 OF 2 · YOUR DETAILS';
+    showStep(form);
+  });
+  failEditBtn.addEventListener('click', ()=>{
+    stepLabel.textContent = 'STEP 1 OF 2 · YOUR DETAILS';
+    showStep(form);
+  });
+
+  function runPayment(){
+    setBtnLoading(payBtn, true);
+    stepLabel.textContent = 'PROCESSING';
+    showStep(stepProcessing);
+    PaymentService.redirectToPayment({type:'telegram-community', ...order}).then(res=>{
+      setBtnLoading(payBtn, false);
+      memberSeq++;
+      const record = {
+        userId: 'TG-U-'+memberSeq,
+        name: order.name, email: order.email, phone: order.phone, telegram: order.telegram,
+        status: 'paid',
+        datetime: new Date().toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'})
+      };
+      AdminDB.add(record);
+      stepLabel.textContent = 'CONFIRMED';
+      showStep(stepSuccess);
+    }).catch(()=>{
+      setBtnLoading(payBtn, false);
+      stepLabel.textContent = 'PAYMENT FAILED';
+      showStep(stepFailure);
+    });
+  }
+  payBtn.addEventListener('click', runPayment);
+  retryBtn.addEventListener('click', runPayment);
+})();
 </script>
 </body>
 </html>
