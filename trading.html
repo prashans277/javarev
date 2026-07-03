@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradingGuru — Master the Markets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+<style>
+:root{
+  --bg:#0A0E14; --panel:#0F1621; --panel2:#131B27; --line:#1E2836;
+  --bull:#00D98A; --bear:#FF5C5C; --gold:#E8B84B;
+  --text:#E7ECF2; --muted:#7C8894; --muted2:#54606D;
+}
+*{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; overflow-x:hidden;}
+.font-display{font-family:'Space Grotesk',sans-serif;}
+.font-mono{font-family:'JetBrains Mono',monospace;}
+.eyebrow{font-family:'JetBrains Mono',monospace; letter-spacing:.18em; text-transform:uppercase; font-size:.72rem; color:var(--bull);}
+.panel{background:linear-gradient(165deg, var(--panel) 0%, #0D1520 100%); border:1px solid rgba(255,255,255,.07); box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 14px 30px -18px rgba(0,0,0,.6);}
+.panel2{background:linear-gradient(165deg, var(--panel2) 0%, #101825 100%); border:1px solid rgba(255,255,255,.06);}
+.grad-bull{background:linear-gradient(135deg,#00D98A,#00A868);}
+.grad-gold{background:linear-gradient(135deg,#F2D07A,#C99A32);}
+.text-grad{background:linear-gradient(135deg,#E7ECF2 30%,#00D98A 100%); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.glow{box-shadow:0 0 0 1px rgba(0,217,138,.15), 0 12px 40px -12px rgba(0,217,138,.25);}
+.hairline{border-top:1px solid var(--line);}
+.hover-lift{transition:transform .4s cubic-bezier(.16,.84,.24,1), box-shadow .4s cubic-bezier(.16,.84,.24,1), border-color .4s ease;}
+.hover-lift:hover{transform:translateY(-7px); border-color:rgba(0,217,138,.38); box-shadow:0 22px 44px -18px rgba(0,0,0,.55), 0 0 0 1px rgba(0,217,138,.12), 0 0 30px -10px rgba(0,217,138,.22);}
+.reveal{opacity:0; transform:translateY(24px); transition:opacity .8s cubic-bezier(.16,.84,.24,1), transform .8s cubic-bezier(.16,.84,.24,1);}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+/* Modal / glassmorphism */
+.modal-overlay{position:fixed; inset:0; background:rgba(6,9,13,.72); backdrop-filter:blur(6px); z-index:100; display:flex; align-items:center; justify-content:center; padding:1.25rem; opacity:0; pointer-events:none; transition:opacity .3s ease;}
+.modal-overlay.open{opacity:1; pointer-events:auto;}
+.modal-card{background:linear-gradient(165deg, rgba(19,27,39,.92), rgba(10,14,20,.96)); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(18px); box-shadow:0 30px 80px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(0,217,138,.08); border-radius:1.1rem; width:100%; max-width:440px; max-height:88vh; overflow-y:auto; transform:translateY(16px) scale(.98); transition:transform .35s cubic-bezier(.16,.84,.24,1);}
+.modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
+.date-pill,.time-pill{transition:all .25s ease;}
+.date-pill.active,.time-pill.active{background:var(--bull); color:#06120C; border-color:var(--bull) !important; font-weight:600;}
+::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+
+/* Nav */
+#nav{transition:background .35s ease, border-color .35s ease, backdrop-filter .35s ease; border-bottom:1px solid transparent;}
+#nav.scrolled{background:rgba(10,14,20,.85); backdrop-filter:blur(14px); border-color:var(--line);}
+.navlink{position:relative; color:var(--muted); transition:color .25s;}
+.navlink::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--bull);transition:width .25s;}
+.navlink:hover{color:var(--text);} .navlink:hover::after{width:100%;}
+
+/* buttons */
+.btn-primary{background:var(--bull); color:#06120C; font-weight:600; transition:box-shadow .3s ease, transform .3s ease, filter .3s ease;}
+.btn-primary:hover{box-shadow:0 10px 34px -8px rgba(0,217,138,.6); transform:translateY(-2px); filter:brightness(1.04);}
+.btn-primary:active{transform:translateY(0); box-shadow:0 4px 14px -6px rgba(0,217,138,.5);}
+.btn-ghost{border:1px solid var(--line); color:var(--text); transition:border-color .3s ease, background .3s ease, transform .3s ease;}
+.btn-ghost:hover{border-color:rgba(0,217,138,.4); background:rgba(255,255,255,.03); transform:translateY(-2px);}
+.btn-ghost:active{transform:translateY(0);}
+
+/* accordion */
+.acc-content{max-height:0; overflow:hidden; transition:max-height .4s ease;}
+.acc-item.open .acc-content{max-height:400px;}
+.acc-item.open .chev{transform:rotate(45deg);}
+.chev{transition:transform .3s;}
+
+/* carousel */
+.carousel-track{transition:transform .5s cubic-bezier(.2,.8,.2,1);}
+
+.mono-num{font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ================= NAV ================= -->
+<header id="nav" class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-lg grad-bull flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 6" stroke="#06120C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6H21V12" stroke="#06120C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="font-display font-semibold text-lg tracking-tight">TradingGuru</span>
+    </div>
+    <nav class="hidden lg:flex items-center gap-8 text-sm">
+      <a href="#home" class="navlink">Home</a>
+      <a href="#courses" class="navlink">Courses</a>
+      <a href="#books" class="navlink">Books</a>
+      <a href="#mentorship" class="navlink">Mentorship</a>
+      <a href="#premium" class="navlink">Premium</a>
+      <a href="#academy" class="navlink">Free Resources</a>
+      <a href="#contact" class="navlink">Contact</a>
+    </nav>
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="#" class="text-sm text-[var(--muted)] hover:text-white transition">Log in</a>
+      <a href="#" class="btn-primary text-sm px-4 py-2 rounded-lg">Sign up</a>
+    </div>
+    <button id="mobileBtn" class="lg:hidden text-xl"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div id="mobileMenu" class="hidden lg:hidden panel border-t border-[var(--line)] px-6 py-5 space-y-4 text-sm">
+    <a href="#home" class="block navlink">Home</a>
+    <a href="#courses" class="block navlink">Courses</a>
+    <a href="#books" class="block navlink">Books</a>
+    <a href="#mentorship" class="block navlink">Mentorship</a>
+    <a href="#premium" class="block navlink">Premium</a>
+    <a href="#academy" class="block navlink">Free Resources</a>
+    <a href="#contact" class="block navlink">Contact</a>
+    <div class="flex gap-3 pt-2">
+      <a href="#" class="flex-1 text-center btn-ghost rounded-lg py-2">Log in</a>
+      <a href="#" class="flex-1 text-center btn-primary rounded-lg py-2">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section id="home" class="relative pt-40 pb-24 px-6 lg:px-10 overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(700px 400px at 50% 10%, rgba(0,217,138,.10), transparent 60%);"></div>
+  <div class="max-w-3xl mx-auto text-center relative reveal">
+    <span class="eyebrow">Trading &amp; Investing Education</span>
+    <h1 class="font-display text-5xl md:text-6xl font-semibold leading-[1.05] mt-5 tracking-tight">
+      Master the Markets.<br><span class="text-grad">Build Wealth</span> with Confidence.
+    </h1>
+    <p class="text-[var(--muted)] text-lg mt-6 max-w-xl mx-auto leading-relaxed">
+      TradingGuru gives you a structured path through trading, investing, and risk management — real curriculum, real mentors, real accountability. No shortcuts, no signals-only hype.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 mt-9">
+      <a href="#courses" class="btn-primary rounded-lg px-6 py-3.5 text-sm">Start Learning</a>
+      <a href="#courses" class="btn-ghost rounded-lg px-6 py-3.5 text-sm">Explore Courses <i class="fa-solid fa-arrow-right ml-1"></i></a>
+    </div>
+    <div class="flex items-center justify-center gap-10 mt-14 hairline pt-8 max-w-lg mx-auto">
+      <div><div class="font-display text-2xl font-semibold mono-num">18,400+</div><div class="text-xs text-[var(--muted)] mt-1">Students taught</div></div>
+      <div><div class="font-display text-2xl font-semibold mono-num">4.9/5</div><div class="text-xs text-[var(--muted)] mt-1">Average rating</div></div>
+      <div><div class="font-display text-2xl font-semibold mono-num">120+</div><div class="text-xs text-[var(--muted)] mt-1">Hours of curriculum</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SECTION 1: LEARN TRADING ================= -->
+<section class="py-16 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="max-w-2xl reveal">
+      <span class="eyebrow">Curriculum Foundations</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">One platform, every stage of the trader's journey.</h2>
+      <p class="text-[var(--muted)] mt-4 leading-relaxed">Whether you're placing your first trade or refining a five-year-old strategy, TradingGuru meets you where you are — with a syllabus that goes deep, not just wide.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-8">
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-building-columns text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Stock Market</h4><p class="text-xs text-[var(--muted)] leading-snug">How exchanges and orders actually work.</p></div>
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-arrows-left-right text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Swing Trading</h4><p class="text-xs text-[var(--muted)] leading-snug">Multi-day moves with structured entries.</p></div>
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-bolt text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Intraday</h4><p class="text-xs text-[var(--muted)] leading-snug">Fast setups inside the day's range.</p></div>
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-layer-group text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Futures &amp; Options</h4><p class="text-xs text-[var(--muted)] leading-snug">Derivatives and strategy construction.</p></div>
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-chart-simple text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Technical Analysis</h4><p class="text-xs text-[var(--muted)] leading-snug">Patterns, indicators, and confluence.</p></div>
+      <div class="reveal panel rounded-lg p-4 hover-lift"><i class="fa-solid fa-brain text-[var(--bull)] text-sm mb-2"></i><h4 class="font-semibold text-sm mb-1">Trading Psychology</h4><p class="text-xs text-[var(--muted)] leading-snug">The discipline layer behind every system.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COURSES ================= -->
+<section id="courses" class="py-24 px-6 lg:px-10 panel2 border-y border-[var(--line)]">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-wrap justify-between items-end gap-6 reveal">
+      <div>
+        <span class="eyebrow">Structured Courses</span>
+        <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Courses built like a curriculum, not a playlist.</h2>
+      </div>
+    </div>
+    <div id="courseGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12"></div>
+  </div>
+</section>
+
+<!-- ================= BOOK A SLOT ================= -->
+<section class="py-24 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="eyebrow">1:1 Sessions</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Book Your Personal Trading Session</h2>
+      <p class="text-[var(--muted)] mt-4">Live over Zoom, one on one — pick a format and a time that works for you.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 mt-12">
+      <div class="reveal panel rounded-2xl p-7 hover-lift">
+        <i class="fa-solid fa-user-tie text-[var(--bull)] text-xl mb-4"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">One-to-One Mentoring</h3>
+        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">60-minute focused session on strategy, mindset, or execution — tailored to you.</p>
+        <div class="font-mono text-[var(--bull)] mb-5">₹2,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="One-to-One Mentoring" data-price="₹2,999">Select a Slot</button>
+      </div>
+      <div class="reveal panel rounded-2xl p-7 hover-lift">
+        <i class="fa-solid fa-chart-pie text-[var(--bull)] text-xl mb-4"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">Portfolio Review</h3>
+        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">A full walk-through of your holdings, allocation, and risk exposure.</p>
+        <div class="font-mono text-[var(--bull)] mb-5">₹3,499 <span class="text-[var(--muted)] text-xs">/ session</span></div>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="Portfolio Review" data-price="₹3,499">Select a Slot</button>
+      </div>
+      <div class="reveal panel rounded-2xl p-7 hover-lift">
+        <i class="fa-solid fa-comments text-[var(--bull)] text-xl mb-4"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">Trading Consultation</h3>
+        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">Open-agenda call to troubleshoot whatever's blocking your progress.</p>
+        <div class="font-mono text-[var(--bull)] mb-5">₹1,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm book-btn" data-service="Trading Consultation" data-price="₹1,999">Select a Slot</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BOOKING MODAL ================= -->
+<div id="bookingModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <div class="text-[10px] font-mono text-[var(--muted)]" id="modalStepLabel">STEP 1 OF 3</div>
+          <h3 class="font-display font-semibold text-lg mt-1" id="modalServiceName">Book a Session</h3>
+        </div>
+        <button id="modalClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <!-- STEP 1: date + time -->
+      <div id="stepDate">
+        <div class="text-xs text-[var(--muted)] mb-3">Choose a date</div>
+        <div class="grid grid-cols-4 gap-2 mb-6" id="dateGrid"></div>
+        <div class="text-xs text-[var(--muted)] mb-3">Available time slots · IST</div>
+        <div class="grid grid-cols-3 gap-2 mb-2" id="modalTimeGrid"></div>
+        <button id="toStepInfo" disabled class="w-full btn-primary rounded-lg py-2.5 text-sm mt-6 opacity-40 cursor-not-allowed">Continue</button>
+      </div>
+
+      <!-- STEP 2: contact info -->
+      <div id="stepInfo" class="hidden">
+        <div class="panel2 rounded-lg p-3 text-xs text-[var(--muted)] mb-5 flex items-center justify-between">
+          <span id="summaryLine">—</span>
+          <button id="backToDate" class="text-[var(--bull)] font-mono">Change</button>
+        </div>
+        <form id="bookingForm" class="space-y-4">
+          <div><label class="text-xs text-[var(--muted)]">Name</label><input required id="bkName" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Your name"></div>
+          <div><label class="text-xs text-[var(--muted)]">Email</label><input required type="email" id="bkEmail" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="you@email.com"></div>
+          <div><label class="text-xs text-[var(--muted)]">Phone</label><input required id="bkPhone" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="+91 98765 43210"></div>
+          <button type="submit" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-2">Confirm Booking</button>
+        </form>
+      </div>
+
+      <!-- STEP 3: success -->
+      <div id="stepSuccess" class="hidden text-center py-4">
+        <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center mb-5"><i class="fa-solid fa-check text-[#06120C] text-xl"></i></div>
+        <h4 class="font-display font-semibold text-lg mb-1">Booking Confirmed</h4>
+        <p class="text-sm text-[var(--muted)] mb-5" id="successLine">Your session is scheduled.</p>
+        <div class="panel2 rounded-lg p-4 text-left text-sm space-y-1.5 mb-6">
+          <div class="flex justify-between"><span class="text-[var(--muted)]">Booking ID</span><span class="font-mono text-[var(--bull)]" id="bookingId">—</span></div>
+          <div class="flex justify-between"><span class="text-[var(--muted)]">Session</span><span id="successService">—</span></div>
+          <div class="flex justify-between"><span class="text-[var(--muted)]">Date &amp; Time</span><span id="successDatetime">—</span></div>
+        </div>
+        <button id="modalDone" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BOOKS ================= -->
+<section id="books" class="py-24 px-6 lg:px-10 panel2 border-y border-[var(--line)]">
+  <div class="max-w-7xl mx-auto">
+    <span class="eyebrow reveal">TradingGuru Bookstore</span>
+    <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight reveal">Written by us. Read by our students.</h2>
+    <div id="bookGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12"></div>
+  </div>
+</section>
+
+<!-- ================= MENTORSHIP ================= -->
+<section id="mentorship" class="py-24 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="eyebrow">Personalized Mentorship</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Learn Directly From TradingGuru</h2>
+      <p class="text-[var(--muted)] mt-4">Weekly live classes, portfolio reviews, and a community that holds you accountable.</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3 mt-10 reveal">
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-video text-[var(--bull)] mr-1.5"></i>Weekly Zoom Classes</span>
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-signal text-[var(--bull)] mr-1.5"></i>Live Trading</span>
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-chart-pie text-[var(--bull)] mr-1.5"></i>Portfolio Review</span>
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-list-check text-[var(--bull)] mr-1.5"></i>Assignments</span>
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-map text-[var(--bull)] mr-1.5"></i>Trading Plans</span>
+      <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-people-group text-[var(--bull)] mr-1.5"></i>Lifetime Community</span>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-7 mt-14 max-w-3xl mx-auto">
+      <div class="reveal panel rounded-2xl p-8 hover-lift">
+        <h3 class="font-display font-semibold text-xl">Starter</h3>
+        <div class="font-mono text-3xl mt-3">₹4,999<span class="text-sm text-[var(--muted)]">/mo</span></div>
+        <ul class="text-sm text-[var(--muted)] mt-6 space-y-3">
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Weekly group Zoom classes</li>
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Community access</li>
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Monthly Q&amp;A</li>
+        </ul>
+        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-8">Join Now</button>
+      </div>
+      <div class="reveal rounded-2xl p-8 hover-lift relative" style="background:linear-gradient(180deg, rgba(0,217,138,.10), transparent); border:1px solid rgba(0,217,138,.4);">
+        <span class="absolute -top-3 left-8 grad-bull text-[#06120C] text-[10px] font-mono font-semibold px-3 py-1 rounded-full">MOST POPULAR</span>
+        <h3 class="font-display font-semibold text-xl">Professional</h3>
+        <div class="font-mono text-3xl mt-3">₹9,999<span class="text-sm text-[var(--muted)]">/mo</span></div>
+        <ul class="text-sm text-[var(--muted)] mt-6 space-y-3">
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Everything in Starter</li>
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Live trading sessions</li>
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Portfolio reviews</li>
+          <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Weekly assignments</li>
+        </ul>
+        <button class="w-full btn-primary rounded-lg py-2.5 text-sm mt-8">Join Now</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PREMIUM COMMUNITY ================= -->
+<section id="premium" class="py-24 px-6 lg:px-10" style="background:linear-gradient(180deg, rgba(232,184,75,.06), transparent);">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+    <div class="reveal">
+      <span class="eyebrow" style="color:var(--gold)">Premium Community</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Everything a serious trader checks before the bell.</h2>
+      <div class="grid grid-cols-2 gap-3 mt-8 text-sm">
+        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Live Market Analysis</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Market News</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Economic Calendar</div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Members Chat</div>
+      </div>
+      <div class="flex items-center gap-2 mt-5 text-sm">
+        <i class="fa-brands fa-telegram" style="color:#34AADF"></i>
+        <span>Telegram Community included</span>
+      </div>
+    </div>
+    <div class="reveal rounded-2xl p-8" style="background:var(--panel); border:1px solid rgba(232,184,75,.35);">
+      <div class="text-xs font-mono" style="color:var(--gold)">TRADINGGURU PREMIUM</div>
+      <div class="font-mono text-4xl font-semibold mt-3">₹1,499<span class="text-base text-[var(--muted)]">/mo</span></div>
+      <p class="text-sm text-[var(--muted)] mt-4 leading-relaxed">Priority support, real-time calls, and a members-only chat with active traders and mentors.</p>
+      <button class="w-full rounded-lg py-4 text-base font-semibold mt-8" style="background:var(--gold); color:#241A05;">Join Premium</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMMUNITY / SOCIAL ================= -->
+<section class="py-24 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto space-y-20">
+
+    <div class="grid md:grid-cols-2 gap-8 items-center reveal">
+      <div class="panel rounded-2xl p-8">
+        <i class="fa-brands fa-telegram text-3xl mb-4" style="color:#34AADF"></i>
+        <h3 class="font-display text-2xl font-semibold">Free Telegram Community</h3>
+        <p class="text-sm text-[var(--muted)] mt-3 leading-relaxed">Daily market updates, educational content, free trading ideas, market news, and honest discussion — no cost, no spam.</p>
+        <a href="#" class="btn-ghost rounded-lg px-5 py-2.5 text-sm inline-block mt-6">Join Telegram</a>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">📈 Daily Market Updates</div>
+        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">🎓 Educational Content</div>
+        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">💡 Free Trading Ideas</div>
+        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">💬 Learning Discussions</div>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <div class="reveal">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-instagram mr-2" style="color:#E1306C"></i>Instagram</h3>
+          <a href="#" class="text-xs font-mono text-[var(--bull)]">Follow Instagram →</a>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Chart reel</div>
+          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Success story</div>
+          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Trade setup</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-youtube mr-2" style="color:#FF0000"></i>YouTube</h3>
+          <a href="#" class="text-xs font-mono text-[var(--bull)]">Subscribe →</a>
+        </div>
+        <div class="space-y-3">
+          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Latest Market Analysis</div>
+          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Beginner Playlist</div>
+          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Live Sessions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="py-24 px-6 lg:px-10 panel2 border-y border-[var(--line)] overflow-hidden">
+  <div class="max-w-4xl mx-auto text-center reveal">
+    <span class="eyebrow">Testimonials</span>
+    <h2 class="font-display text-3xl font-semibold mt-4">Traders who did the work</h2>
+  </div>
+  <div class="max-w-3xl mx-auto mt-12 overflow-hidden relative">
+    <div id="testiTrack" class="carousel-track flex"></div>
+    <div class="flex justify-center gap-2 mt-6" id="testiDots"></div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="py-24 px-6 lg:px-10">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="font-display text-3xl font-semibold mt-4">Questions, answered</h2>
+    </div>
+    <div id="faqList" class="mt-10 space-y-3"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="py-24 px-6 lg:px-10 panel2 border-t border-[var(--line)]">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+    <div class="reveal">
+      <span class="eyebrow">Contact</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Talk to the team</h2>
+      <p class="text-[var(--muted)] mt-4">Questions about courses, mentorship, or billing — we usually reply within a business day.</p>
+      <div class="space-y-4 mt-8 text-sm">
+        <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-[var(--bull)] w-5"></i>+91 98765 43210</div>
+        <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-[var(--bull)] w-5"></i>support@tradingguru.com</div>
+        <div class="flex items-center gap-3"><i class="fa-solid fa-clock text-[var(--bull)] w-5"></i>Mon–Sat, 9:00–19:00 IST</div>
+        <div class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-[var(--bull)] w-5"></i>Cyber Hub, Gurugram, Haryana, India</div>
+      </div>
+      <div class="flex gap-3 mt-10">
+        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-telegram"></i></a>
+        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <form class="reveal panel rounded-2xl p-7 space-y-4" onsubmit="event.preventDefault(); this.querySelector('.sent').classList.remove('hidden');">
+      <div><label class="text-xs text-[var(--muted)]">Name</label><input class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Your name" required></div>
+      <div><label class="text-xs text-[var(--muted)]">Email</label><input type="email" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="you@email.com" required></div>
+      <div><label class="text-xs text-[var(--muted)]">Message</label><textarea rows="4" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="How can we help?" required></textarea></div>
+      <button class="w-full btn-primary rounded-lg py-3 text-sm">Send Message</button>
+      <p class="sent hidden text-xs text-[var(--bull)] text-center">Message sent — we'll get back to you shortly.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="px-6 lg:px-10 py-14 hairline">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
+    <div>
+      <div class="flex items-center gap-2.5 mb-4">
+        <div class="w-8 h-8 rounded-lg grad-bull flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 6" stroke="#06120C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="font-display font-semibold">TradingGuru</span>
+      </div>
+      <p class="text-sm text-[var(--muted)] leading-relaxed">Structured education for traders and investors who want to build wealth methodically.</p>
+    </div>
+    <div>
+      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Quick Links</div>
+      <ul class="space-y-2.5 text-sm text-[var(--muted)]">
+        <li><a href="#courses" class="hover:text-white transition">Courses</a></li>
+        <li><a href="#books" class="hover:text-white transition">Books</a></li>
+        <li><a href="#mentorship" class="hover:text-white transition">Mentorship</a></li>
+        <li><a href="#premium" class="hover:text-white transition">Premium</a></li>
+        <li><a href="#academy" class="hover:text-white transition">Resources</a></li>
+        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Social</div>
+      <ul class="space-y-2.5 text-sm text-[var(--muted)]">
+        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-telegram w-4 mr-2"></i>Telegram</a></li>
+        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram w-4 mr-2"></i>Instagram</a></li>
+        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-youtube w-4 mr-2"></i>YouTube</a></li>
+        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-linkedin w-4 mr-2"></i>LinkedIn</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Newsletter</div>
+      <p class="text-sm text-[var(--muted)] mb-3">One email a week. Market notes, no noise.</p>
+      <div class="flex gap-2">
+        <input class="flex-1 min-w-0 bg-transparent border border-[var(--line)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Email address">
+        <button class="btn-primary rounded-lg px-4 text-sm">→</button>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto hairline mt-10 pt-6 text-xs text-[var(--muted2)] flex flex-wrap justify-between gap-3">
+    <span>© 2026 TradingGuru. All rights reserved.</span>
+    <span>Trading involves risk. Education only, not financial advice.</span>
+  </div>
+</footer>
+
+<script>
+// nav scroll state
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=> nav.classList.toggle('scrolled', window.scrollY > 20));
+
+// mobile menu
+const mobileBtn = document.getElementById('mobileBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+mobileBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('hidden'));
+
+// reveal on scroll
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// courses data
+const courses = [
+  {t:'Beginner Trading', lvl:'Beginner', dur:'6 hrs', img:'📘', price:'₹999', desc:'Your first structured step into how markets actually work.'},
+  {t:'Technical Analysis', lvl:'Beginner', dur:'10 hrs', img:'📊', price:'₹1,999', desc:'Read charts like a professional — patterns, indicators, structure.'},
+  {t:'Price Action', lvl:'Intermediate', dur:'8 hrs', img:'📈', price:'₹2,499', desc:'Trade what price shows you, without indicator clutter.'},
+  {t:'Swing Trading', lvl:'Intermediate', dur:'9 hrs', img:'🔁', price:'₹2,999', desc:"Multi-day setups built for people who can't watch screens all day."},
+  {t:'Intraday Trading', lvl:'Advanced', dur:'12 hrs', img:'⚡', price:'₹3,499', desc:'Speed, discipline, and a playbook for the trading day.'},
+  {t:'Options Trading', lvl:'Advanced', dur:'14 hrs', img:'🧮', price:'₹3,999', desc:'Strategy construction, Greeks, and defined-risk trades.'},
+  {t:'Risk Management', lvl:'All levels', dur:'5 hrs', img:'🛡️', price:'₹1,499', desc:'Position sizing and capital protection, non-negotiably explained.'},
+  {t:'Trading Psychology', lvl:'All levels', dur:'6 hrs', img:'🧠', price:'₹1,799', desc:'The mental game that decides who survives long-term.'},
+];
+document.getElementById('courseGrid').innerHTML = courses.map(c=>`
+  <div class="reveal panel rounded-xl overflow-hidden hover-lift flex flex-col">
+    <div class="h-28 flex items-center justify-center text-4xl" style="background:linear-gradient(135deg, rgba(0,217,138,.14), rgba(0,217,138,.02));">${c.img}</div>
+    <div class="p-5 flex flex-col flex-1">
+      <div class="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] mb-2">
+        <span class="panel2 rounded-full px-2 py-0.5">${c.lvl}</span><span class="panel2 rounded-full px-2 py-0.5">${c.dur}</span>
+      </div>
+      <h4 class="font-semibold mb-1.5">${c.t}</h4>
+      <p class="text-xs text-[var(--muted)] leading-relaxed flex-1">${c.desc}</p>
+      <div class="flex items-center justify-between mt-4 pt-4 hairline">
+        <span class="font-mono text-[var(--bull)] font-semibold">${c.price}</span>
+        <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">Enroll</button>
+      </div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('#courseGrid .reveal').forEach(el=>io.observe(el));
+
+// books data
+const books = [
+  {t:'TradingGuru Blueprint', a:'By TradingGuru', img:'📗', price:'₹499'},
+  {t:'Price Action Mastery', a:'By TradingGuru', img:'📕', price:'₹599'},
+  {t:'Winning Trader Psychology', a:'By TradingGuru', img:'📙', price:'₹549'},
+  {t:'Risk Management Secrets', a:'By TradingGuru', img:'📔', price:'₹449'},
+];
+document.getElementById('bookGrid').innerHTML = books.map(b=>`
+  <div class="reveal panel rounded-xl p-5 hover-lift">
+    <div class="h-32 rounded-lg flex items-center justify-center text-4xl mb-4" style="background:linear-gradient(135deg, rgba(0,217,138,.14), rgba(0,217,138,.02));">${b.img}</div>
+    <h4 class="font-semibold text-sm mb-1">${b.t}</h4>
+    <div class="text-xs text-[var(--muted)] mb-4">${b.a}</div>
+    <div class="flex items-center justify-between">
+      <span class="font-mono text-[var(--bull)] font-semibold text-sm">${b.price}</span>
+      <button class="btn-primary rounded-lg px-3 py-1.5 text-xs">Buy Now</button>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('#bookGrid .reveal').forEach(el=>io.observe(el));
+
+// ===== Booking modal logic =====
+(function(){
+  const overlay = document.getElementById('bookingModal');
+  const stepDate = document.getElementById('stepDate');
+  const stepInfo = document.getElementById('stepInfo');
+  const stepSuccess = document.getElementById('stepSuccess');
+  const stepLabel = document.getElementById('modalStepLabel');
+  const serviceNameEl = document.getElementById('modalServiceName');
+  const dateGrid = document.getElementById('dateGrid');
+  const timeGrid = document.getElementById('modalTimeGrid');
+  const toStepInfo = document.getElementById('toStepInfo');
+  const summaryLine = document.getElementById('summaryLine');
+
+  let ctx = {service:'', price:'', date:null, dateLabel:'', time:null};
+
+  function buildDates(){
+    const days = [];
+    const now = new Date();
+    for(let i=1;i<=8;i++){
+      const d = new Date(now); d.setDate(now.getDate()+i);
+      days.push(d);
+    }
+    dateGrid.innerHTML = days.map((d,i)=>{
+      const label = d.toLocaleDateString('en-IN',{weekday:'short'});
+      const num = d.getDate();
+      return `<button type="button" class="date-pill panel2 rounded-lg py-2.5 text-xs flex flex-col items-center gap-1 border border-transparent" data-i="${i}">
+        <span class="text-[10px] text-[var(--muted)]">${label}</span><span class="font-mono font-semibold">${num}</span>
+      </button>`;
+    }).join('');
+    dateGrid.querySelectorAll('.date-pill').forEach((btn,i)=>{
+      btn.addEventListener('click',()=>{
+        dateGrid.querySelectorAll('.date-pill').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        ctx.date = days[i];
+        ctx.dateLabel = days[i].toLocaleDateString('en-IN',{weekday:'short', day:'numeric', month:'short'});
+        checkStep1();
+      });
+    });
+  }
+
+  function buildTimes(){
+    const times = ['9:00 AM','11:30 AM','1:00 PM','3:30 PM','5:00 PM','7:00 PM'];
+    timeGrid.innerHTML = times.map(t=>`<button type="button" class="time-pill panel2 rounded-lg py-2 text-xs font-mono border border-transparent">${t}</button>`).join('');
+    timeGrid.querySelectorAll('.time-pill').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        timeGrid.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        ctx.time = btn.textContent;
+        checkStep1();
+      });
+    });
+  }
+
+  function checkStep1(){
+    const ready = ctx.date && ctx.time;
+    toStepInfo.disabled = !ready;
+    toStepInfo.classList.toggle('opacity-40', !ready);
+    toStepInfo.classList.toggle('cursor-not-allowed', !ready);
+  }
+
+  function openModal(service, price){
+    ctx = {service, price, date:null, dateLabel:'', time:null};
+    serviceNameEl.textContent = service;
+    stepDate.classList.remove('hidden'); stepInfo.classList.add('hidden'); stepSuccess.classList.add('hidden');
+    stepLabel.textContent = 'STEP 1 OF 3 · CHOOSE DATE & TIME';
+    buildDates(); buildTimes(); checkStep1();
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  document.querySelectorAll('.book-btn').forEach(btn=>{
+    btn.addEventListener('click',()=> openModal(btn.dataset.service, btn.dataset.price));
+  });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalDone').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
+
+  toStepInfo.addEventListener('click', ()=>{
+    stepDate.classList.add('hidden'); stepInfo.classList.remove('hidden');
+    stepLabel.textContent = 'STEP 2 OF 3 · YOUR DETAILS';
+    summaryLine.textContent = `${ctx.service} · ${ctx.dateLabel} · ${ctx.time}`;
+  });
+  document.getElementById('backToDate').addEventListener('click', ()=>{
+    stepInfo.classList.add('hidden'); stepDate.classList.remove('hidden');
+    stepLabel.textContent = 'STEP 1 OF 3 · CHOOSE DATE & TIME';
+  });
+
+  document.getElementById('bookingForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const id = 'TG-' + Math.random().toString(36).slice(2,6).toUpperCase() + '-' + Math.floor(1000+Math.random()*9000);
+    document.getElementById('bookingId').textContent = id;
+    document.getElementById('successService').textContent = `${ctx.service} (${ctx.price})`;
+    document.getElementById('successDatetime').textContent = `${ctx.dateLabel} · ${ctx.time} IST`;
+    document.getElementById('successLine').textContent = `A Zoom link will be emailed to you before the session.`;
+    stepInfo.classList.add('hidden'); stepSuccess.classList.remove('hidden');
+    stepLabel.textContent = 'STEP 3 OF 3 · CONFIRMED';
+  });
+})();
+
+// testimonials
+const testis = [
+  {n:'Arjun Mehta', o:'Software Engineer', r:5, rev:'Went from randomly buying stocks to actually having a plan. The risk management module alone paid for itself.'},
+  {n:'Priya Nair', o:'Marketing Manager', r:5, rev:'The mentorship calls kept me accountable. I finally stopped revenge trading after losses.'},
+  {n:'Rohit Sharma', o:'Business Owner', r:4, rev:"Options trading course was dense but thorough. Wish I'd found this two years earlier."},
+];
+function initial(n){return n.split(' ').map(x=>x[0]).join('');}
+document.getElementById('testiTrack').innerHTML = testis.map(t=>`
+  <div class="w-full shrink-0 px-2">
+    <div class="panel rounded-2xl p-8 text-center">
+      <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center font-display font-semibold text-[#06120C]">${initial(t.n)}</div>
+      <div class="text-[var(--gold)] mt-4 text-sm">${'★'.repeat(t.r)}${'☆'.repeat(5-t.r)}</div>
+      <p class="text-sm text-[var(--muted)] mt-4 leading-relaxed max-w-lg mx-auto">"${t.rev}"</p>
+      <div class="mt-5 font-semibold text-sm">${t.n}</div>
+      <div class="text-xs text-[var(--muted)]">${t.o}</div>
+    </div>
+  </div>`).join('');
+let ti=0;
+const dots = document.getElementById('testiDots');
+dots.innerHTML = testis.map((_,i)=>`<button class="w-2 h-2 rounded-full ${i===0?'bg-[var(--bull)]':'bg-[var(--line)]'} testi-dot" data-i="${i}"></button>`).join('');
+function goTesti(i){ ti=i; document.getElementById('testiTrack').style.transform=`translateX(-${i*100}%)`;
+  document.querySelectorAll('.testi-dot').forEach((d,j)=>d.className=`w-2 h-2 rounded-full testi-dot ${j===i?'bg-[var(--bull)]':'bg-[var(--line)]'}`);}
+document.querySelectorAll('.testi-dot').forEach(d=>d.addEventListener('click',()=>goTesti(+d.dataset.i)));
+setInterval(()=>goTesti((ti+1)%testis.length), 5000);
+
+// FAQ
+const faqs = [
+  {q:'Do I need prior trading experience?', a:'No. The Beginner track starts from the basics of how markets and orders work, before moving into charts and strategy.'},
+  {q:'Are the mentorship sessions live?', a:'Yes, all mentorship sessions run live over Zoom, with recordings available afterward for Professional and Elite members.'},
+  {q:'Is this financial advice?', a:'No. TradingGuru is an education platform. Nothing here should be treated as personalized investment or financial advice.'},
+  {q:'Can I cancel my subscription anytime?', a:'Yes, monthly plans can be cancelled anytime from your account settings with no lock-in period.'},
+];
+document.getElementById('faqList').innerHTML = faqs.map((f,i)=>`
+  <div class="acc-item panel rounded-xl overflow-hidden">
+    <button class="acc-head w-full flex items-center justify-between px-6 py-4 text-left text-sm font-medium">
+      ${f.q}<span class="chev text-[var(--bull)]">+</span>
+    </button>
+    <div class="acc-content px-6"><p class="text-sm text-[var(--muted)] pb-5 leading-relaxed">${f.a}</p></div>
+  </div>`).join('');
+document.querySelectorAll('.acc-head').forEach(h=>h.addEventListener('click',()=>{
+  h.closest('.acc-item').classList.toggle('open');
+}));
+</script>
+</body>
+</html>
