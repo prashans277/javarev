@@ -54,8 +54,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 .btn-loading .spinner{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);}
 
 /* Selectable slot card */
-.slot-card{cursor:pointer; transition:border-color .25s ease, background .25s ease, transform .25s ease;}
-.slot-card.active{border-color:var(--bull) !important; background:rgba(0,217,138,.08); transform:translateY(-2px);}
 
 /* Auth view toggle */
 .auth-view.hidden{display:none;}
@@ -79,6 +77,8 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 .btn-primary:hover{box-shadow:0 10px 34px -8px rgba(0,217,138,.6); transform:translateY(-2px); filter:brightness(1.04);}
 .btn-primary:active{transform:translateY(0); box-shadow:0 4px 14px -6px rgba(0,217,138,.5);}
 .btn-ghost{border:1px solid var(--line); color:var(--text); transition:border-color .3s ease, background .3s ease, transform .3s ease;}
+.btn-ghost-green{border:1px solid rgba(0,217,138,.4); color:var(--bull); background:rgba(0,217,138,.06); transition:border-color .3s ease, background .3s ease, transform .3s ease;}
+.btn-ghost-green:hover{border-color:var(--bull); background:rgba(0,217,138,.14); transform:translateY(-2px);}
 .btn-ghost:hover{border-color:rgba(0,217,138,.4); background:rgba(255,255,255,.03); transform:translateY(-2px);}
 .btn-ghost:active{transform:translateY(0);}
 
@@ -106,7 +106,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
       <a href="#courses" class="navlink">Courses</a>
       <a href="#books" class="navlink">Books</a>
       <a href="#mentorship" class="navlink">Mentorship</a>
-      <a href="#premium" class="navlink">Premium</a>
+      <a href="#mentorship" class="navlink">Premium</a>
       <a href="#community-resources" class="navlink">Free Resources</a>
       <a href="#contact" class="navlink">Contact</a>
     </nav>
@@ -121,7 +121,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <a href="#courses" class="block navlink">Courses</a>
     <a href="#books" class="block navlink">Books</a>
     <a href="#mentorship" class="block navlink">Mentorship</a>
-    <a href="#premium" class="block navlink">Premium</a>
+    <a href="#mentorship" class="block navlink">Premium</a>
     <a href="#community-resources" class="block navlink">Free Resources</a>
     <a href="#contact" class="block navlink">Contact</a>
     <div class="flex gap-3 pt-2" id="navAuthAreaMobile">
@@ -171,47 +171,14 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 <!-- ================= COURSES ================= -->
 <section id="courses" class="py-24 px-6 lg:px-10 panel2 border-y border-[var(--line)]">
   <div class="max-w-7xl mx-auto">
-    <div class="flex flex-wrap justify-between items-end gap-6 reveal">
-      <div>
-        <span class="eyebrow">Structured Courses</span>
-        <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Courses built like a curriculum, not a playlist.</h2>
-      </div>
-    </div>
-    <div id="courseGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12"></div>
-  </div>
-</section>
-
-<!-- ================= BOOK A SLOT ================= -->
-<section class="py-24 px-6 lg:px-10">
-  <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto reveal">
-      <span class="eyebrow">1:1 Sessions</span>
-      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Book Your Personal Trading Session</h2>
-      <p class="text-[var(--muted)] mt-4">Live over Zoom, one on one — pick a format and a time that works for you.</p>
+      <span class="eyebrow">Structured Courses</span>
+      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Master Trading with Two Complete Learning Programs</h2>
+      <p class="text-[var(--muted)] mt-4 leading-relaxed">Choose the learning path that matches your experience. Our courses are designed to take you from beginner to professional trader with practical knowledge, live examples, and risk management strategies.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-6 mt-12">
-      <div class="reveal panel rounded-2xl p-7 hover-lift">
-        <i class="fa-solid fa-user-tie text-[var(--bull)] text-xl mb-4"></i>
-        <h3 class="font-display font-semibold text-lg mb-2">One-to-One Mentoring</h3>
-        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">60-minute focused session on strategy, mindset, or execution — tailored to you.</p>
-        <div class="font-mono text-[var(--bull)] mb-5">₹2,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="One-to-One Mentoring">Select a Slot</button>
-      </div>
-      <div class="reveal panel rounded-2xl p-7 hover-lift">
-        <i class="fa-solid fa-chart-pie text-[var(--bull)] text-xl mb-4"></i>
-        <h3 class="font-display font-semibold text-lg mb-2">Portfolio Review</h3>
-        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">A full walk-through of your holdings, allocation, and risk exposure.</p>
-        <div class="font-mono text-[var(--bull)] mb-5">₹3,499 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="Portfolio Review">Select a Slot</button>
-      </div>
-      <div class="reveal panel rounded-2xl p-7 hover-lift">
-        <i class="fa-solid fa-comments text-[var(--bull)] text-xl mb-4"></i>
-        <h3 class="font-display font-semibold text-lg mb-2">Trading Consultation</h3>
-        <p class="text-sm text-[var(--muted)] mb-5 leading-relaxed">Open-agenda call to troubleshoot whatever's blocking your progress.</p>
-        <div class="font-mono text-[var(--bull)] mb-5">₹1,999 <span class="text-[var(--muted)] text-xs">/ session</span></div>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm checkout-btn" data-type="booking" data-title="Trading Consultation">Select a Slot</button>
-      </div>
-    </div>
+
+    <!-- ===== Two premium course cards ===== -->
+    <div class="grid lg:grid-cols-2 gap-8 lg:gap-10 mt-14 items-stretch" id="courseCardGrid"></div>
   </div>
 </section>
 
@@ -227,27 +194,17 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
         <button type="button" id="coClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
       </div>
 
-      <!-- STEP: slot (booking only) -->
-      <div id="coStepSlot" class="hidden">
-        <div class="text-xs text-[var(--muted)] mb-3">Available slot</div>
-        <button type="button" id="coSlotCard" class="slot-card w-full panel2 rounded-xl p-4 flex items-center justify-between text-left border border-transparent">
-          <div>
-            <div class="font-semibold text-sm">Next Sunday</div>
-            <div class="text-xs text-[var(--muted)] mt-1 font-mono">7:00 PM – 9:00 PM IST</div>
-          </div>
-          <i class="fa-solid fa-circle-check text-lg" style="color:var(--muted2)"></i>
-        </button>
-        <button type="button" id="coSlotContinue" disabled class="w-full btn-primary rounded-lg py-2.5 text-sm mt-5 opacity-40 cursor-not-allowed">
-          <span class="btn-label">Continue</span>
-        </button>
-      </div>
-
       <!-- STEP: email -->
       <form id="coStepEmail" class="hidden">
         <div class="panel2 rounded-lg p-3 text-xs text-[var(--muted)] mb-5" id="coSummaryLine"></div>
         <label class="text-xs text-[var(--muted)]">Email Address</label>
         <input id="coEmail" type="email" class="field-input" placeholder="you@email.com">
         <p class="field-error" id="coEmailError">Please enter a valid email address.</p>
+        <div id="coTelegramField" class="hidden mt-3.5">
+          <label class="text-xs text-[var(--muted)]">Telegram Username</label>
+          <input id="coTelegram" class="field-input" placeholder="@yourusername">
+          <p class="field-error" id="coTelegramError">Enter a valid @username (5+ characters).</p>
+        </div>
         <button type="submit" id="coSubmitBtn" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-4">
           <span class="btn-label">Continue</span>
         </button>
@@ -382,7 +339,20 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
       <span class="panel2 rounded-full px-4 py-2 text-xs font-mono text-[var(--muted)]"><i class="fa-solid fa-people-group text-[var(--bull)] mr-1.5"></i>Lifetime Community</span>
     </div>
 
-    <div class="grid sm:grid-cols-2 gap-7 mt-14 max-w-3xl mx-auto">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-14 max-w-5xl mx-auto">
+      <div class="reveal panel rounded-2xl p-8 hover-lift" style="border:1px solid rgba(232,184,75,.35);">
+        <div class="text-xs font-mono" style="color:var(--gold)">TRADINGGURU PREMIUM</div>
+        <h3 class="font-display font-semibold text-xl mt-2">Premium Community</h3>
+        <div class="font-mono text-3xl mt-3">₹399<span class="text-sm text-[var(--muted)]">/mo</span></div>
+        <ul class="text-sm text-[var(--muted)] mt-6 space-y-3">
+          <li><i class="fa-solid fa-check mr-2" style="color:var(--gold)"></i>Live Market Analysis</li>
+          <li><i class="fa-solid fa-check mr-2" style="color:var(--gold)"></i>Market News</li>
+          <li><i class="fa-solid fa-check mr-2" style="color:var(--gold)"></i>Economic Calendar</li>
+          <li><i class="fa-solid fa-check mr-2" style="color:var(--gold)"></i>Members Chat</li>
+          <li><i class="fa-brands fa-telegram mr-2" style="color:#34AADF"></i>Telegram Community included</li>
+        </ul>
+        <button class="w-full rounded-lg py-2.5 text-sm mt-8 checkout-btn" style="background:var(--gold); color:#241A05;" data-type="premium" data-title="Premium Community">Join Premium</button>
+      </div>
       <div class="reveal panel rounded-2xl p-8 hover-lift">
         <h3 class="font-display font-semibold text-xl">Starter</h3>
         <div class="font-mono text-3xl mt-3">₹4,999<span class="text-sm text-[var(--muted)]">/mo</span></div>
@@ -391,7 +361,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Community access</li>
           <li><i class="fa-solid fa-check text-[var(--bull)] mr-2"></i>Monthly Q&amp;A</li>
         </ul>
-        <button class="w-full btn-ghost rounded-lg py-2.5 text-sm mt-8 checkout-btn" data-type="membership" data-title="Starter Plan">Join Now</button>
+        <button class="w-full btn-ghost-green rounded-lg py-2.5 text-sm mt-8 checkout-btn" data-type="membership" data-title="Starter Plan">Join Now</button>
       </div>
       <div class="reveal rounded-2xl p-8 hover-lift relative" style="background:linear-gradient(180deg, rgba(0,217,138,.10), transparent); border:1px solid rgba(0,217,138,.4);">
         <span class="absolute -top-3 left-8 grad-bull text-[#06120C] text-[10px] font-mono font-semibold px-3 py-1 rounded-full">MOST POPULAR</span>
@@ -409,78 +379,35 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
   </div>
 </section>
 
-<!-- ================= PREMIUM COMMUNITY ================= -->
-<section id="premium" class="py-24 px-6 lg:px-10" style="background:linear-gradient(180deg, rgba(232,184,75,.06), transparent);">
-  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
-    <div class="reveal">
-      <span class="eyebrow" style="color:var(--gold)">Premium Community</span>
-      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Everything a serious trader checks before the bell.</h2>
-      <div class="grid grid-cols-2 gap-3 mt-8 text-sm">
-        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Live Market Analysis</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Market News</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Economic Calendar</div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-check" style="color:var(--gold)"></i>Members Chat</div>
-      </div>
-      <div class="flex items-center gap-2 mt-5 text-sm">
-        <i class="fa-brands fa-telegram" style="color:#34AADF"></i>
-        <span>Telegram Community included</span>
-      </div>
-    </div>
-    <div class="reveal rounded-2xl p-8" style="background:var(--panel); border:1px solid rgba(232,184,75,.35);">
-      <div class="text-xs font-mono" style="color:var(--gold)">TRADINGGURU PREMIUM</div>
-      <div class="font-mono text-4xl font-semibold mt-3">₹1,499<span class="text-base text-[var(--muted)]">/mo</span></div>
-      <p class="text-sm text-[var(--muted)] mt-4 leading-relaxed">Priority support, real-time calls, and a members-only chat with active traders and mentors.</p>
-      <button class="w-full rounded-lg py-4 text-base font-semibold mt-8" style="background:var(--gold); color:#241A05;">Join Premium</button>
-    </div>
-  </div>
-</section>
-
 <!-- ================= COMMUNITY / SOCIAL ================= -->
-<section id="community-resources" class="py-24 px-6 lg:px-10 scroll-mt-28">
-  <div class="max-w-7xl mx-auto space-y-20">
-    <div class="text-center max-w-xl mx-auto reveal">
+<section id="community-resources" class="py-16 px-6 lg:px-10 scroll-mt-28">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-xl mx-auto reveal mb-10">
       <span class="eyebrow">Community</span>
       <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Free Community Resources</h2>
       <p class="text-[var(--muted)] mt-4">No cost, no login — just follow along wherever you already are.</p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-8 items-center reveal">
-      <div class="panel rounded-2xl p-8">
-        <i class="fa-brands fa-telegram text-3xl mb-4" style="color:#34AADF"></i>
-        <h3 class="font-display text-2xl font-semibold">📱 Telegram Community</h3>
-        <p class="text-sm text-[var(--muted)] mt-3 leading-relaxed">Daily market updates, educational content, free trading ideas, market news, and honest discussion — no cost, no spam.</p>
-        <button type="button" class="btn-ghost rounded-lg px-5 py-2.5 text-sm inline-block mt-6 telegram-join-btn">Join Telegram</button>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div class="reveal panel rounded-2xl p-7 hover-lift flex flex-col h-full">
+        <i class="fa-brands fa-telegram text-2xl mb-4" style="color:#34AADF"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">Telegram Community</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed flex-1">Join our free Telegram community for daily market updates and trading discussions.</p>
+        <button type="button" class="w-full btn-primary rounded-lg py-2.5 text-sm mt-6 telegram-join-btn">Join Now</button>
       </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">📈 Daily Market Updates</div>
-        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">🎓 Educational Content</div>
-        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">💡 Free Trading Ideas</div>
-        <div class="panel2 rounded-xl p-5 text-sm text-[var(--muted)]">💬 Learning Discussions</div>
-      </div>
-    </div>
 
-    <div class="grid lg:grid-cols-2 gap-8">
-      <div class="reveal">
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-instagram mr-2" style="color:#E1306C"></i>📸 Instagram</h3>
-          <a href="#" class="text-xs font-mono text-[var(--bull)]">Follow Instagram →</a>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Chart reel</div>
-          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Success story</div>
-          <div class="aspect-square rounded-lg panel2 flex items-center justify-center text-[var(--muted)] text-xs">Trade setup</div>
-        </div>
+      <div class="reveal panel rounded-2xl p-7 hover-lift flex flex-col h-full">
+        <i class="fa-brands fa-instagram text-2xl mb-4" style="color:#E1306C"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">Instagram</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed flex-1">Follow us for daily trading updates, educational reels, and market insights.</p>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="w-full text-center btn-primary rounded-lg py-2.5 text-sm mt-6 inline-block">Follow Now</a>
       </div>
-      <div class="reveal">
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="font-display text-xl font-semibold"><i class="fa-brands fa-youtube mr-2" style="color:#FF0000"></i>▶️ YouTube</h3>
-          <a href="#" class="text-xs font-mono text-[var(--bull)]">Subscribe →</a>
-        </div>
-        <div class="space-y-3">
-          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Latest Market Analysis</div>
-          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Beginner Playlist</div>
-          <div class="panel2 rounded-lg p-4 flex items-center gap-3 text-sm hover-lift"><i class="fa-solid fa-play text-[var(--bull)]"></i>Live Sessions</div>
-        </div>
+
+      <div class="reveal panel rounded-2xl p-7 hover-lift flex flex-col h-full">
+        <i class="fa-brands fa-youtube text-2xl mb-4" style="color:#FF0000"></i>
+        <h3 class="font-display font-semibold text-lg mb-2">YouTube</h3>
+        <p class="text-sm text-[var(--muted)] leading-relaxed flex-1">Subscribe for free trading tutorials, market analysis, and beginner-friendly videos.</p>
+        <a href="https://youtube.com" target="_blank" rel="noopener" class="w-full text-center btn-primary rounded-lg py-2.5 text-sm mt-6 inline-block">Subscribe Now</a>
       </div>
     </div>
   </div>
@@ -545,7 +472,7 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
         <li><a href="#courses" class="hover:text-white transition">Courses</a></li>
         <li><a href="#books" class="hover:text-white transition">Books</a></li>
         <li><a href="#mentorship" class="hover:text-white transition">Mentorship</a></li>
-        <li><a href="#premium" class="hover:text-white transition">Premium</a></li>
+        <li><a href="#mentorship" class="hover:text-white transition">Premium</a></li>
         <li><a href="#community-resources" class="hover:text-white transition">Resources</a></li>
         <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
       </ul>
@@ -719,33 +646,48 @@ const io = new IntersectionObserver((entries)=>{
 },{threshold:0.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-// courses data
+// courses data — two premium programs
 const courses = [
-  {t:'Beginner Trading', lvl:'Beginner', dur:'6 hrs', img:'📘', price:'₹999', desc:'Your first structured step into how markets actually work.'},
-  {t:'Technical Analysis', lvl:'Beginner', dur:'10 hrs', img:'📊', price:'₹1,999', desc:'Read charts like a professional — patterns, indicators, structure.'},
-  {t:'Price Action', lvl:'Intermediate', dur:'8 hrs', img:'📈', price:'₹2,499', desc:'Trade what price shows you, without indicator clutter.'},
-  {t:'Swing Trading', lvl:'Intermediate', dur:'9 hrs', img:'🔁', price:'₹2,999', desc:"Multi-day setups built for people who can't watch screens all day."},
-  {t:'Intraday Trading', lvl:'Advanced', dur:'12 hrs', img:'⚡', price:'₹3,499', desc:'Speed, discipline, and a playbook for the trading day.'},
-  {t:'Options Trading', lvl:'Advanced', dur:'14 hrs', img:'🧮', price:'₹3,999', desc:'Strategy construction, Greeks, and defined-risk trades.'},
-  {t:'Risk Management', lvl:'All levels', dur:'5 hrs', img:'🛡️', price:'₹1,499', desc:'Position sizing and capital protection, non-negotiably explained.'},
-  {t:'Trading Psychology', lvl:'All levels', dur:'6 hrs', img:'🧠', price:'₹1,799', desc:'The mental game that decides who survives long-term.'},
+  {
+    key:'beginner', icon:'fa-seedling', tag:'Beginner • Complete Course', popular:false,
+    title:'Beginner Trading Masterclass',
+    desc:'This is a complete beginner-friendly trading course designed for someone with no prior knowledge. It covers everything required to start trading confidently and build a strong foundation.',
+    topics:['Introduction to Stock Market','Trading Basics','NSE & BSE Overview','Types of Markets','Candlestick Patterns','Support & Resistance','Trend Identification','Price Action Basics','Chart Reading','Time Frames','Risk Management','Position Sizing','Trading Psychology','Capital Management','Swing Trading Basics','Intraday Basics','Futures & Options Introduction','Live Trade Examples','Common Beginner Mistakes','Trading Checklist'],
+    price:'₹2,999'
+  },
+  {
+    key:'technical', icon:'fa-chart-line', tag:'Intermediate to Advanced', popular:true,
+    title:'Technical Analysis Masterclass',
+    desc:'A complete technical analysis program focused on professional trading strategies, chart analysis, institutional concepts, and advanced market reading.',
+    topics:['Advanced Price Action','Support & Resistance Strategies','Trendline Analysis','Chart Patterns','Candlestick Combinations','Moving Averages','RSI','MACD','Bollinger Bands','Volume Analysis','Market Structure','Breakout Strategies','Pullback Entries','Supply & Demand','Smart Money Concepts','Liquidity Concepts','Order Blocks','Swing Trading Setups','Intraday Strategies','Options Trading Strategies','Trade Planning','Risk to Reward','Live Market Analysis','Real Trade Examples'],
+    price:'₹4,999'
+  },
 ];
-document.getElementById('courseGrid').innerHTML = courses.map(c=>`
-  <div class="reveal panel rounded-xl overflow-hidden hover-lift flex flex-col">
-    <div class="h-28 flex items-center justify-center text-4xl" style="background:linear-gradient(135deg, rgba(0,217,138,.14), rgba(0,217,138,.02));">${c.img}</div>
-    <div class="p-5 flex flex-col flex-1">
-      <div class="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] mb-2">
-        <span class="panel2 rounded-full px-2 py-0.5">${c.lvl}</span><span class="panel2 rounded-full px-2 py-0.5">${c.dur}</span>
-      </div>
-      <h4 class="font-semibold mb-1.5">${c.t}</h4>
-      <p class="text-xs text-[var(--muted)] leading-relaxed flex-1">${c.desc}</p>
-      <div class="flex items-center justify-between mt-4 pt-4 hairline">
-        <span class="font-mono text-[var(--bull)] font-semibold">${c.price}</span>
-        <button class="btn-primary rounded-lg px-3 py-1.5 text-xs checkout-btn" data-type="enroll" data-title="${c.t}">Enroll</button>
+
+document.getElementById('courseCardGrid').innerHTML = courses.map(c=>`
+  <div class="reveal rounded-3xl p-8 lg:p-10 hover-lift relative flex flex-col ${c.popular ? '' : 'panel'}"
+       style="${c.popular ? 'background:linear-gradient(180deg, rgba(0,217,138,.10), var(--panel) 40%); border:1px solid rgba(0,217,138,.4);' : ''}">
+    ${c.popular ? '<span class="absolute -top-3 left-8 grad-bull text-[#06120C] text-[10px] font-mono font-semibold px-3 py-1 rounded-full">MOST POPULAR</span>' : ''}
+    <div class="flex items-center gap-4 mb-5">
+      <div class="w-14 h-14 rounded-xl grad-bull flex items-center justify-center text-xl shrink-0"><i class="fa-solid ${c.icon} text-[#06120C]"></i></div>
+      <div>
+        <div class="text-[10px] font-mono text-[var(--muted)] uppercase tracking-wide">${c.tag}</div>
+        <h3 class="font-display text-2xl font-semibold mt-1 leading-tight">${c.title}</h3>
       </div>
     </div>
+    <p class="text-sm text-[var(--muted)] leading-relaxed mb-6">${c.desc}</p>
+
+    <div class="text-[10px] font-mono text-[var(--muted)] uppercase tracking-wide mb-3">Topics Included</div>
+    <div class="grid sm:grid-cols-2 gap-x-4 gap-y-2 mb-6">
+      ${c.topics.map(t=>`<div class="flex items-start gap-2 text-xs text-[var(--muted)] leading-snug"><i class="fa-solid fa-check text-[var(--bull)] mt-0.5 shrink-0"></i><span>${t}</span></div>`).join('')}
+    </div>
+
+    <div class="flex items-center justify-between pt-6 mt-auto hairline">
+      <span class="font-mono text-2xl font-semibold text-[var(--bull)]">${c.price}</span>
+      <button class="btn-primary rounded-lg px-6 py-3 text-sm checkout-btn" data-type="enroll" data-title="${c.title}">Enroll Now</button>
+    </div>
   </div>`).join('');
-document.querySelectorAll('#courseGrid .reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('#courseCardGrid .reveal').forEach(el=>io.observe(el));
 
 // books data
 const books = [
@@ -807,46 +749,42 @@ function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
 function isValidPhone(v){ return /^[+]?[\d\s-]{8,15}$/.test(v.trim()); }
 function isEmailOrPhone(v){ return isValidEmail(v) || isValidPhone(v); }
 
-// ===== Checkout modal (Enroll / Booking / Bookstore / Membership) =====
+// ===== Checkout modal (Enroll / Booking / Bookstore / Membership / Premium) =====
 (function(){
   const overlay = document.getElementById('checkoutModal');
   const stepLabel = document.getElementById('coStepLabel');
   const titleEl = document.getElementById('coTitle');
-  const stepSlot = document.getElementById('coStepSlot');
-  const slotCard = document.getElementById('coSlotCard');
-  const slotContinue = document.getElementById('coSlotContinue');
   const stepEmail = document.getElementById('coStepEmail');
   const summaryLine = document.getElementById('coSummaryLine');
   const emailInput = document.getElementById('coEmail');
   const emailError = document.getElementById('coEmailError');
+  const telegramField = document.getElementById('coTelegramField');
+  const telegramInput = document.getElementById('coTelegram');
+  const telegramError = document.getElementById('coTelegramError');
   const submitBtn = document.getElementById('coSubmitBtn');
   const stepProcessing = document.getElementById('coStepProcessing');
   const stepSuccess = document.getElementById('coStepSuccess');
 
-  let order = {type:'', title:'', email:'', slotChosen:false};
+  let order = {type:'', title:'', email:'', telegram:''};
 
   function resetSteps(){
-    [stepSlot, stepEmail, stepProcessing, stepSuccess].forEach(el=>el.classList.add('hidden'));
+    [stepEmail, stepProcessing, stepSuccess].forEach(el=>el.classList.add('hidden'));
     emailInput.value=''; showFieldError(emailInput, emailError, false);
-    slotCard.classList.remove('active');
-    slotContinue.disabled = true;
-    slotContinue.classList.add('opacity-40','cursor-not-allowed');
-    order.slotChosen = false;
+    telegramInput.value=''; showFieldError(telegramInput, telegramError, false);
+    telegramField.classList.add('hidden');
   }
 
   function open(type, title){
-    order = {type, title, email:'', slotChosen:false};
+    order = {type, title, email:'', telegram:''};
     titleEl.textContent = title || 'Checkout';
     resetSteps();
-    if(type === 'booking'){
-      stepLabel.textContent = 'STEP 1 OF 2 · SELECT SLOT';
-      stepSlot.classList.remove('hidden');
-    } else {
-      stepLabel.textContent = 'CHECKOUT';
-      summaryLine.textContent = title;
-      submitBtn.querySelector('.btn-label').textContent = type === 'enroll' ? 'Continue' : 'Proceed to Payment';
-      stepEmail.classList.remove('hidden');
+    stepLabel.textContent = 'CHECKOUT';
+    summaryLine.textContent = title;
+    if(type === 'premium'){
+      telegramField.classList.remove('hidden');
     }
+    submitBtn.querySelector('.btn-label').textContent = type === 'enroll' ? 'Continue' : 'Proceed to Payment';
+    stepEmail.classList.remove('hidden');
     overlay.classList.add('open');
     document.body.style.overflow='hidden';
   }
@@ -866,26 +804,23 @@ function isEmailOrPhone(v){ return isValidEmail(v) || isValidPhone(v); }
     document.querySelector('#home').scrollIntoView();
   });
 
-  slotCard.addEventListener('click', ()=>{
-    slotCard.classList.add('active');
-    order.slotChosen = true;
-    slotContinue.disabled = false;
-    slotContinue.classList.remove('opacity-40','cursor-not-allowed');
-  });
-  slotContinue.addEventListener('click', ()=>{
-    stepSlot.classList.add('hidden');
-    stepLabel.textContent = 'STEP 2 OF 2 · EMAIL';
-    summaryLine.textContent = `${order.title} · Next Sunday · 7:00 PM – 9:00 PM IST`;
-    submitBtn.querySelector('.btn-label').textContent = 'Proceed to Payment';
-    stepEmail.classList.remove('hidden');
-  });
-
   stepEmail.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const valid = isValidEmail(emailInput.value);
-    showFieldError(emailInput, emailError, !valid);
-    if(!valid) return;
+    const emailValid = isValidEmail(emailInput.value);
+    showFieldError(emailInput, emailError, !emailValid);
+
+    let telegramValid = true;
+    if(order.type === 'premium'){
+      telegramValid = /^@?[a-zA-Z0-9_]{5,}$/.test(telegramInput.value.trim());
+      showFieldError(telegramInput, telegramError, !telegramValid);
+    }
+    if(!emailValid || !telegramValid) return;
+
     order.email = emailInput.value.trim();
+    if(order.type === 'premium'){
+      const raw = telegramInput.value.trim();
+      order.telegram = raw.startsWith('@') ? raw : '@'+raw;
+    }
 
     setBtnLoading(submitBtn, true);
     stepEmail.classList.add('hidden');
