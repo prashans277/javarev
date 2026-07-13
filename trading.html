@@ -106,7 +106,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
       <a href="#courses" class="navlink">Courses</a>
       <a href="#books" class="navlink">Books</a>
       <a href="#mentorship" class="navlink">Mentorship</a>
-      <a href="#mentorship" class="navlink">Premium</a>
       <a href="#community-resources" class="navlink">Free Resources</a>
       <a href="#contact" class="navlink">Contact</a>
     </nav>
@@ -121,7 +120,6 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
     <a href="#courses" class="block navlink">Courses</a>
     <a href="#books" class="block navlink">Books</a>
     <a href="#mentorship" class="block navlink">Mentorship</a>
-    <a href="#mentorship" class="block navlink">Premium</a>
     <a href="#community-resources" class="block navlink">Free Resources</a>
     <a href="#contact" class="block navlink">Contact</a>
     <div class="flex gap-3 pt-2" id="navAuthAreaMobile">
@@ -425,84 +423,121 @@ body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; ov
 </section>
 
 <!-- ================= CONTACT ================= -->
-<section id="contact" class="py-24 px-6 lg:px-10 panel2 border-t border-[var(--line)]">
-  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
-    <div class="reveal">
-      <span class="eyebrow">Contact</span>
-      <h2 class="font-display text-4xl font-semibold mt-4 tracking-tight">Talk to the team</h2>
-      <p class="text-[var(--muted)] mt-4">Questions about courses, mentorship, or billing — we usually reply within a business day.</p>
-      <div class="space-y-4 mt-8 text-sm">
-        <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-[var(--bull)] w-5"></i>+91 98765 43210</div>
-        <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-[var(--bull)] w-5"></i>support@tradingguru.com</div>
-        <div class="flex items-center gap-3"><i class="fa-solid fa-clock text-[var(--bull)] w-5"></i>Mon–Sat, 9:00–19:00 IST</div>
-        <div class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-[var(--bull)] w-5"></i>Cyber Hub, Gurugram, Haryana, India</div>
+<section id="contact" class="py-16 px-6 lg:px-10 panel2 border-t border-[var(--line)]">
+  <div class="max-w-3xl mx-auto text-center reveal">
+    <span class="eyebrow">Contact</span>
+    <h2 class="font-display text-3xl font-semibold mt-4">Talk to the team</h2>
+    <p class="text-[var(--muted)] mt-3">Questions about courses, mentorship, or billing — we usually reply within a business day.</p>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-3 mt-8 text-sm">
+      <div class="flex items-center gap-2"><i class="fa-solid fa-phone text-[var(--bull)]"></i>+91 98765 43210</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-envelope text-[var(--bull)]"></i>support@tradingguru.com</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-[var(--bull)]"></i>Mon–Sat, 9:00–19:00 IST</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-[var(--bull)]"></i>Cyber Hub, Gurugram, Haryana, India</div>
+    </div>
+    <div class="flex justify-center gap-3 mt-8">
+      <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-telegram"></i></a>
+      <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-linkedin"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CALLBACK / WHATSAPP CALLOUT ================= -->
+<section class="py-16 px-6 lg:px-10 panel2 border-t border-[var(--line)]">
+  <div class="max-w-7xl mx-auto">
+    <div class="panel rounded-3xl p-8 lg:p-10 reveal flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div>
+        <h3 class="font-display text-2xl font-semibold">Got any doubts or interested in a plan?</h3>
+        <p class="text-sm text-[var(--muted)] mt-2 max-w-lg leading-relaxed">We're just a message away! Whether you're unsure which plan suits you or want to know more, we're here to help.</p>
       </div>
-      <div class="flex gap-3 mt-10">
-        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-telegram"></i></a>
-        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-youtube"></i></a>
-        <a href="#" class="w-10 h-10 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-linkedin"></i></a>
+      <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+        <button type="button" id="requestCallbackBtn" class="panel2 rounded-full px-6 py-3.5 text-sm flex items-center justify-center gap-2 hover-lift whitespace-nowrap"><i class="fa-solid fa-phone text-[var(--bull)]"></i>Request for Callback</button>
+        <a href="https://wa.me/919876543210" target="_blank" rel="noopener" class="panel2 rounded-full px-6 py-3.5 text-sm flex items-center justify-center gap-2 hover-lift whitespace-nowrap"><i class="fa-brands fa-whatsapp" style="color:#25D366"></i>Message on WhatsApp</a>
       </div>
     </div>
-    <form class="reveal panel rounded-2xl p-7 space-y-4" onsubmit="event.preventDefault(); this.querySelector('.sent').classList.remove('hidden');">
-      <div><label class="text-xs text-[var(--muted)]">Name</label><input class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Your name" required></div>
-      <div><label class="text-xs text-[var(--muted)]">Email</label><input type="email" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="you@email.com" required></div>
-      <div><label class="text-xs text-[var(--muted)]">Message</label><textarea rows="4" class="w-full mt-1.5 bg-transparent border border-[var(--line)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="How can we help?" required></textarea></div>
-      <button class="w-full btn-primary rounded-lg py-3 text-sm">Send Message</button>
-      <p class="sent hidden text-xs text-[var(--bull)] text-center">Message sent — we'll get back to you shortly.</p>
-    </form>
   </div>
 </section>
 
 <!-- ================= FOOTER ================= -->
-<footer class="px-6 lg:px-10 py-14 hairline">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-10">
-    <div>
-      <div class="flex items-center gap-2.5 mb-4">
-        <div class="w-8 h-8 rounded-lg grad-bull flex items-center justify-center">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 6" stroke="#06120C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span class="font-display font-semibold">TradingGuru</span>
+<footer class="px-6 lg:px-10 py-10 hairline">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-2.5 shrink-0">
+      <div class="w-8 h-8 rounded-lg grad-bull flex items-center justify-center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 6" stroke="#06120C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <p class="text-sm text-[var(--muted)] leading-relaxed">Structured education for traders and investors who want to build wealth methodically.</p>
+      <span class="font-display font-semibold">TradingGuru</span>
     </div>
-    <div>
-      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Quick Links</div>
-      <ul class="space-y-2.5 text-sm text-[var(--muted)]">
-        <li><a href="#courses" class="hover:text-white transition">Courses</a></li>
-        <li><a href="#books" class="hover:text-white transition">Books</a></li>
-        <li><a href="#mentorship" class="hover:text-white transition">Mentorship</a></li>
-        <li><a href="#mentorship" class="hover:text-white transition">Premium</a></li>
-        <li><a href="#community-resources" class="hover:text-white transition">Resources</a></li>
-        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Social</div>
-      <ul class="space-y-2.5 text-sm text-[var(--muted)]">
-        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-telegram w-4 mr-2"></i>Telegram</a></li>
-        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram w-4 mr-2"></i>Instagram</a></li>
-        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-youtube w-4 mr-2"></i>YouTube</a></li>
-        <li><a href="#" class="hover:text-white transition"><i class="fa-brands fa-linkedin w-4 mr-2"></i>LinkedIn</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="text-xs font-mono text-[var(--muted)] mb-4 uppercase tracking-widest">Newsletter</div>
-      <p class="text-sm text-[var(--muted)] mb-3">One email a week. Market notes, no noise.</p>
-      <div class="flex gap-2">
-        <input class="flex-1 min-w-0 bg-transparent border border-[var(--line)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--bull)]" placeholder="Email address">
-        <button class="btn-primary rounded-lg px-4 text-sm">→</button>
-      </div>
+    <nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-[var(--muted)]">
+      <a href="#home" class="hover:text-white transition">About</a><span class="text-[var(--line)]">|</span>
+      <a href="#contact" class="hover:text-white transition">Contact us</a><span class="text-[var(--line)]">|</span>
+      <a href="#mentorship" class="hover:text-white transition">Pricing</a><span class="text-[var(--line)]">|</span>
+      <a href="#" class="hover:text-white transition">Privacy Policy</a><span class="text-[var(--line)]">|</span>
+      <a href="#" class="hover:text-white transition">Terms and Conditions</a><span class="text-[var(--line)]">|</span>
+      <a href="#" class="hover:text-white transition">Cancellation and Refund Policy</a>
+    </nav>
+    <div class="flex gap-3 shrink-0">
+      <a href="#" class="w-9 h-9 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-telegram"></i></a>
+      <a href="#" class="w-9 h-9 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" class="w-9 h-9 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#" class="w-9 h-9 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-linkedin"></i></a>
+      <a href="#" class="w-9 h-9 rounded-lg panel flex items-center justify-center hover-lift"><i class="fa-brands fa-youtube"></i></a>
     </div>
   </div>
-  <div class="max-w-7xl mx-auto hairline mt-10 pt-6 text-xs text-[var(--muted2)] flex flex-wrap justify-between gap-3">
-    <span>© 2026 TradingGuru. All rights reserved.</span>
-    <span>Trading involves risk. Education only, not financial advice.</span>
+  <div class="max-w-7xl mx-auto text-center mt-8 text-xs text-[var(--muted2)]">
+    <p>Copyright © 2026 TradingGuru | All rights reserved.</p>
+    <p class="mt-1">Trading involves risk. Education only, not financial advice.</p>
   </div>
   <div class="max-w-7xl mx-auto text-center mt-3">
     <button type="button" id="openAdminBtn" class="text-[10px] font-mono text-[var(--muted2)] hover:text-[var(--muted)] transition">Admin Dashboard</button>
   </div>
 </footer>
+
+<!-- ================= ENQUIRY / CALLBACK MODAL ================= -->
+<div id="enquiryModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-[10px] font-mono text-[var(--muted)]">ENQUIRY</div>
+        <button type="button" id="enquiryClose" class="w-8 h-8 rounded-lg panel2 flex items-center justify-center hover:border-[var(--bear)] transition"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <div id="enquiryFormStep">
+        <h3 class="font-display font-semibold text-xl text-center mt-2">Have a question? Request a callback</h3>
+        <p class="text-sm text-[var(--muted)] text-center mt-2 mb-6">Let us know what you're looking for. We'll assist you right away.</p>
+        <form id="enquiryForm" class="space-y-4">
+          <div>
+            <input id="enqName" class="field-input" placeholder="Enter your name">
+            <p class="field-error" id="enqNameError">Please enter your name.</p>
+          </div>
+          <div>
+            <input id="enqEmail" type="email" class="field-input" placeholder="Enter your email (optional)">
+            <p class="field-error" id="enqEmailError">Please enter a valid email address.</p>
+          </div>
+          <div>
+            <input id="enqPhone" class="field-input" placeholder="Enter your phone number">
+            <p class="field-error" id="enqPhoneError">Please enter a valid phone number.</p>
+          </div>
+          <div>
+            <textarea id="enqMessage" rows="4" class="field-input" placeholder="Write your message/query/opinion..."></textarea>
+            <p class="field-error" id="enqMessageError">Please write a short message.</p>
+          </div>
+          <div class="flex gap-3 pt-1">
+            <button type="button" id="enquiryCancel" class="flex-1 btn-ghost rounded-lg py-2.5 text-sm">Cancel</button>
+            <button type="submit" id="enquirySubmitBtn" class="flex-1 btn-primary rounded-lg py-2.5 text-sm"><span class="btn-label">Submit now</span></button>
+          </div>
+        </form>
+      </div>
+
+      <div id="enquirySuccessStep" class="hidden text-center py-4">
+        <div class="w-14 h-14 rounded-full grad-bull mx-auto flex items-center justify-center mb-5"><i class="fa-solid fa-check text-[#06120C] text-xl"></i></div>
+        <h4 class="font-display font-semibold text-lg mb-2">Request Received</h4>
+        <p class="text-sm text-[var(--muted)] mb-6">Thanks — our team will call you back shortly.</p>
+        <button type="button" id="enquiryDone" class="w-full btn-ghost rounded-lg py-2.5 text-sm">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ================= TELEGRAM JOIN MODAL ================= -->
 <div id="telegramModal" class="modal-overlay">
@@ -1133,6 +1168,67 @@ const AdminUI = (function(){
   }
   payBtn.addEventListener('click', runPayment);
   retryBtn.addEventListener('click', runPayment);
+})();
+
+// ===== Enquiry / Request-a-callback modal =====
+(function(){
+  const overlay = document.getElementById('enquiryModal');
+  const openBtn = document.getElementById('requestCallbackBtn');
+  const closeBtn = document.getElementById('enquiryClose');
+  const cancelBtn = document.getElementById('enquiryCancel');
+  const doneBtn = document.getElementById('enquiryDone');
+  const formStep = document.getElementById('enquiryFormStep');
+  const successStep = document.getElementById('enquirySuccessStep');
+  const form = document.getElementById('enquiryForm');
+
+  const name = document.getElementById('enqName'), nameErr = document.getElementById('enqNameError');
+  const email = document.getElementById('enqEmail'), emailErr = document.getElementById('enqEmailError');
+  const phone = document.getElementById('enqPhone'), phoneErr = document.getElementById('enqPhoneError');
+  const message = document.getElementById('enqMessage'), messageErr = document.getElementById('enqMessageError');
+  const submitBtn = document.getElementById('enquirySubmitBtn');
+
+  function open(){
+    form.reset();
+    [name,email,phone,message].forEach(i=>i.classList.remove('invalid'));
+    [nameErr,emailErr,phoneErr,messageErr].forEach(e=>e.classList.remove('show'));
+    formStep.classList.remove('hidden');
+    successStep.classList.add('hidden');
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  cancelBtn.addEventListener('click', close);
+  doneBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const nameValid = name.value.trim().length >= 2;
+    const emailValid = email.value.trim() === '' || isValidEmail(email.value);
+    const phoneValid = isValidPhone(phone.value);
+    const messageValid = message.value.trim().length >= 5;
+
+    showFieldError(name, nameErr, !nameValid);
+    showFieldError(email, emailErr, !emailValid);
+    showFieldError(phone, phoneErr, !phoneValid);
+    showFieldError(message, messageErr, !messageValid);
+    if(!nameValid || !emailValid || !phoneValid || !messageValid) return;
+
+    setBtnLoading(submitBtn, true);
+    try{
+      await new Promise(resolve=> setTimeout(resolve, 1000)); // placeholder for a real enquiry-submit API call
+      formStep.classList.add('hidden');
+      successStep.classList.remove('hidden');
+    } finally {
+      setBtnLoading(submitBtn, false);
+    }
+  });
 })();
 </script>
 </body>
